@@ -1,1 +1,1 @@
-# Troll Text Detection
+# Troll Text Classification
