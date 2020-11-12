@@ -14,7 +14,7 @@ def sentiment_scores(sentence, neg, neu, pos, compound):
     
 # Driver code 
 if __name__ == "__main__" : 
-    data = pd.read_csv('data/dataset.csv')
+    data = pd.read_csv('data/old/dataset.csv')
     content = data['content']
     annotation = data['annotation']
     cuss_word = []
@@ -65,4 +65,4 @@ if __name__ == "__main__" :
     d1['punctuation_count'] = punctuation_count
     d1['contain_profanity'] = contain_profanity
     d1['num_profanity'] = num_profanity
-    d1.to_csv('data/new_dataset.csv', index=True)
+    d1.to_csv('data/dataset.csv', index=True)
