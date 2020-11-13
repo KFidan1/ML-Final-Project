@@ -8,6 +8,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score, confusion_matrix, classification_report
 
+import joblib
 import pandas as pd
 import nltk
 try:
@@ -16,38 +17,33 @@ except LookupError:
   nltk.download('punkt')
 
 
-TRAIN_D2V = True
-TRAIN_ML = None
-
+# load the models here, set to None if it should re-train the model
+d2v_loaded = Doc2Vec.load("./models/d2v_1.model")
+ml_loaded = joblib.load("./models/ml_1.model")
 
 class NLP:
   def __init__(self, d2v_model=None, ml_model=None):
-    self.d2v_model = d2v_model # this is the doc2vec model
-    self.ml_model = ml_model   # this is the ml model that is trained on the doc2vec output
+    self.d2v_model = d2v_model # this is the doc2vec model to construct the word binding arrays
+    self.ml_model = ml_model   # this is the ml model that is trained on the doc2vec arrays
+
+  def preprocess(self, tweet):
+    # todo take out stop words, dont change anything at all, etc
+    return tweet.lower()
 
   def tag_data(self, data):
-    # todo play around with preprocessing (what is fed into tokenizer)
-    # take out stop words, convert to lower, dont change anything at all, etc
-    tagged_data = [TaggedDocument(words=word_tokenize(_d.lower()), tags=[str(i)]) for i, _d in enumerate(data)]
+    tagged_data = [TaggedDocument(words=word_tokenize(self.preprocess(tweet)), tags=[str(i)]) for i, tweet in enumerate(data)]
     return tagged_data
 
-
   def test(self, x_test):
-    x_tagged = self.tag_data(x_test)
-    x_embedded_array = []
-    for x in x_tagged:
-      x_embedded_array.append(self.d2v_model.infer_vector(x[0]))
-
     # get the word embeddings from our trained doc2vec model
-    # todo add the preprocessing from above (the .lower() call and todos)
-    # x_embedded_array = self.d2v_model.infer_vector(x_test)
+    x_tagged = self.tag_data(x_test)
+    x_embedded_array = [self.d2v_model.infer_vector(x[0]) for x in x_tagged]
 
+    # use the trained ML model to predict from each embedding
     y_pred = self.ml_model.predict(x_embedded_array)
     return y_pred
 
-
   def train(self, x_train, y_train):
-
     if self.d2v_model is None:
       tagged_data = self.tag_data(x_train)
 
@@ -73,21 +69,18 @@ class NLP:
       self.d2v_model.save("./models/d2v_1.model")
       print("d2v_model saved")
 
-
-
     if self.ml_model is None:
       # get word embeddings from the trained d2v model
       x_tagged = self.tag_data(x_train)
-      x_embedded_array = []
-      for x in x_tagged:
-        x_embedded_array.append(self.d2v_model.infer_vector(x[0]))
-
-      # print("x_embedded_array[0]", x_embedded_array[0])
-      # print("y_train[0]", y_train[0])
+      x_embedded_array = [self.d2v_model.infer_vector(x[0]) for x in x_tagged]
 
       # train the ML model from the word embeddings
-      self.ml_model = LogisticRegression()
+      # todo try different models
+      self.ml_model = LogisticRegression(random_state=0)
       self.ml_model.fit(x_embedded_array, y_train)
+
+      joblib.dump(self.ml_model, "./models/ml_1.model")
+      print("ml_model saved")
 
 
 if __name__ == "__main__":
@@ -98,18 +91,8 @@ if __name__ == "__main__":
   Y = data["annotation"]
   x_train, x_test, y_train, y_test = train_test_split(X.to_numpy(), Y.to_numpy(), test_size=0.2, shuffle=False)
 
-  # load the doc2vec model if we don't want to train it again
-  # nlp = None
-  # if TRAIN_D2V:
-  #   nlp = NLP()
-  #   nlp.train(x_train, y_train)
-  # else:
-  #   d2v_model = Doc2Vec.load("./models/d2v_1.model")
-  #   nlp = NLP(d2v_model=d2v_model)
-  #   print("d2v_model loaded")
-
-  d2v_model = Doc2Vec.load("./models/d2v_1.model")
-  nlp = NLP(d2v_model=d2v_model)
+  # will only train the models that aren't provided
+  nlp = NLP(d2v_model=d2v_loaded, ml_model=ml_loaded)
   nlp.train(x_train, y_train)
 
   # get predictions for the test data
