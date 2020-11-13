@@ -1,9 +1,12 @@
 # natural language processing method of identifying troll text
 
-
 from gensim.models.doc2vec import Doc2Vec, TaggedDocument
 from nltk.tokenize import word_tokenize
+from nltk.corpus import stopwords
+
 from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LogisticRegression
+
 import pandas as pd
 import nltk
 try:
@@ -12,63 +15,79 @@ except LookupError:
   nltk.download('punkt')
 
 
-TRAIN = False
+TRAIN_D2V = True
+TRAIN_ML = None
 
 
-def tag_data(data):
-  # todo play around with preprocessing (what is fed into tokenizer)
-  # take out stop words, convert to lower, dont change anything at all, etc
-  tagged_data = [TaggedDocument(words=word_tokenize(_d.lower()), tags=[str(i)]) for i, _d in enumerate(x_train)]
-  return tagged_data
+class NLP:
+  def __init__(self, d2v_model=None, ml_model=None):
+    self.d2v_model = d2v_model # this is the doc2vec model
+    self.ml_model = ml_model   # this is the ml model that is trained on the doc2vec output
+
+  def tag_data(self, data):
+    # todo play around with preprocessing (what is fed into tokenizer)
+    # take out stop words, convert to lower, dont change anything at all, etc
+    tagged_data = [TaggedDocument(words=word_tokenize(_d.lower()), tags=[str(i)]) for i, _d in enumerate(x_train)]
+    return tagged_data
 
 
-def test(model, data):
-  tagged_data = tag_data(data)
+  def test(self, x_test):
+    tagged_data = self.tag_data(x_test)
 
-  # to find the vector of a document which is not in training data
-  test_data = word_tokenize("Get fucking real dude".lower())
-  v1 = model.infer_vector(test_data)
-  print("V1_infer", v1)
+    # get the word embeddings from our trained doc2vec model
+    # todo add the preprocessing from above (the .lower() call and todos)
+    x_embedded_array = self.d2v_model.infer_vector(x_test)
 
-  # to find most similar doc using tags
-  similar_doc = model.docvecs.most_similar('1')
-  print(similar_doc)
+    y_pred = ml_model.predict(x_embedded_array)
+    return y_pred
 
-  # to find vector of doc in training data using tags or in other words, printing the vector of document at index 1 in training data
-  print(model.docvecs['1'])
-  pass
 
-def train(data):
-  tagged_data = tag_data(data)
+  def train(self, x_train, y_train):
 
-  # hyperparameters
-  max_epochs = 10
-  vec_size = 20
-  alpha = 0.025
+    if self.d2v_model is None:
+      tagged_data = self.tag_data(x_train)
 
-  # dm=1 will preserve the word order, dm=0 is the bow where order is ignroed
-  model = Doc2Vec(vector_size=vec_size, alpha=alpha, min_alpha=0.00025, min_count=1, dm=1)
-  model.build_vocab(tagged_data)
+      # hyperparameters
+      max_epochs = 10
+      vec_size = 20
+      alpha = 0.025
 
-  # train the doc2vec model
-  for epoch in range(max_epochs):
-    print('iteration {0}'.format(epoch))
-    model.train(tagged_data, total_examples=model.corpus_count, epochs=model.epochs)
+      # dm=1 will preserve the word order, dm=0 is the bow where order is ignroed
+      self.d2v_model = Doc2Vec(vector_size=vec_size, alpha=alpha, min_alpha=0.00025, min_count=1, dm=1)
+      self.d2v_model.build_vocab(tagged_data)
 
-    # decrease the learning rate
-    model.alpha -= 0.0002
-    # fix the learning rate, no decay
-    model.min_alpha = model.alpha
+      # train the doc2vec model
+      for epoch in range(max_epochs):
+        print('iteration {0}'.format(epoch))
+        self.d2v_model.train(tagged_data, total_examples=self.d2v_model.corpus_count, epochs=self.d2v_model.epochs)
 
-  model.save("./models/d2v_1.model")
-  print("Model saved")
+        # decrease the learning rate
+        self.d2v_model.alpha -= 0.0002
+        # fix the learning rate, no decay
+        self.d2v_model.min_alpha = self.d2v_model.alpha
 
-  # todo, loop through each tweet and get the vector representation of it
-  # each tweet will have a vector which will have a corresponding label
+      self.d2v_model.save("./models/d2v_1.model")
+      print("d2v_model saved")
 
-  return model
 
-if __name__ == "__main__" :
+
+
+    if self.ml_model is None:
+      # get word embeddings from the trained d2v model
+      x_embedded_array = []
+      for x in x_train:
+        print(x)
+        x_embedded_array.append(self.d2v_model.infer_vector(x))
+
+      print("x_embedded_array", x_embedded_array)
+      print("y_train", y_train)
+
+      # train the ML model from the word embeddings
+      self.ml_model = LogisticRegression()
+      self.ml_model.fit(x_embedded_array, y_train)
+
+
+if __name__ == "__main__":
   # read the data, shuffle, and split into train/test
   data = pd.read_csv("./data/dataset.csv", usecols=["content", "annotation"])
   data = data.sample(frac=1, random_state=0).reset_index(drop=True)
@@ -76,13 +95,23 @@ if __name__ == "__main__" :
   Y = data["annotation"]
   x_train, x_test, y_train, y_test = train_test_split(X, Y, test_size=0.8, shuffle=False)
 
-  if TRAIN:
-    model = train(data)
-  else:
-    model = Doc2Vec.load("./models/d2v_1.model")
-    print("Model loaded")
+  # load the doc2vec model if we don't want to train it again
+  # nlp = None
+  # if TRAIN_D2V:
+  #   nlp = NLP()
+  #   nlp.train(x_train, y_train)
+  # else:
+  #   d2v_model = Doc2Vec.load("./models/d2v_1.model")
+  #   nlp = NLP(d2v_model=d2v_model)
+  #   print("d2v_model loaded")
 
-  y_pred = test(model, data)
+  d2v_model = Doc2Vec.load("./models/d2v_1.model")
+  nlp = NLP(d2v_model=d2v_model)
+  nlp = nlp.train(x_train, y_train)
+
+
+  # get predictions for the test data
+  # y_pred = nlp.test(x_test)
 
   # todo get accuracy, plots, other metrics
 
