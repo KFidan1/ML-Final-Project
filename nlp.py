@@ -6,6 +6,7 @@ from nltk.corpus import stopwords
 
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import accuracy_score, confusion_matrix, classification_report
 
 import pandas as pd
 import nltk
@@ -27,18 +28,21 @@ class NLP:
   def tag_data(self, data):
     # todo play around with preprocessing (what is fed into tokenizer)
     # take out stop words, convert to lower, dont change anything at all, etc
-    tagged_data = [TaggedDocument(words=word_tokenize(_d.lower()), tags=[str(i)]) for i, _d in enumerate(x_train)]
+    tagged_data = [TaggedDocument(words=word_tokenize(_d.lower()), tags=[str(i)]) for i, _d in enumerate(data)]
     return tagged_data
 
 
   def test(self, x_test):
-    tagged_data = self.tag_data(x_test)
+    x_tagged = self.tag_data(x_test)
+    x_embedded_array = []
+    for x in x_tagged:
+      x_embedded_array.append(self.d2v_model.infer_vector(x[0]))
 
     # get the word embeddings from our trained doc2vec model
     # todo add the preprocessing from above (the .lower() call and todos)
-    x_embedded_array = self.d2v_model.infer_vector(x_test)
+    # x_embedded_array = self.d2v_model.infer_vector(x_test)
 
-    y_pred = ml_model.predict(x_embedded_array)
+    y_pred = self.ml_model.predict(x_embedded_array)
     return y_pred
 
 
@@ -71,16 +75,15 @@ class NLP:
 
 
 
-
     if self.ml_model is None:
       # get word embeddings from the trained d2v model
+      x_tagged = self.tag_data(x_train)
       x_embedded_array = []
-      for x in x_train:
-        print(x)
-        x_embedded_array.append(self.d2v_model.infer_vector(x))
+      for x in x_tagged:
+        x_embedded_array.append(self.d2v_model.infer_vector(x[0]))
 
-      print("x_embedded_array", x_embedded_array)
-      print("y_train", y_train)
+      # print("x_embedded_array[0]", x_embedded_array[0])
+      # print("y_train[0]", y_train[0])
 
       # train the ML model from the word embeddings
       self.ml_model = LogisticRegression()
@@ -93,7 +96,7 @@ if __name__ == "__main__":
   data = data.sample(frac=1, random_state=0).reset_index(drop=True)
   X = data["content"]
   Y = data["annotation"]
-  x_train, x_test, y_train, y_test = train_test_split(X, Y, test_size=0.8, shuffle=False)
+  x_train, x_test, y_train, y_test = train_test_split(X.to_numpy(), Y.to_numpy(), test_size=0.2, shuffle=False)
 
   # load the doc2vec model if we don't want to train it again
   # nlp = None
@@ -107,11 +110,17 @@ if __name__ == "__main__":
 
   d2v_model = Doc2Vec.load("./models/d2v_1.model")
   nlp = NLP(d2v_model=d2v_model)
-  nlp = nlp.train(x_train, y_train)
-
+  nlp.train(x_train, y_train)
 
   # get predictions for the test data
-  # y_pred = nlp.test(x_test)
+  y_pred = nlp.test(x_test)
+
+  print("pred, actual, tweet")
+  for i in range(len(y_pred)-1):
+    print(y_pred[i], y_test[i], x_test[i])
+  print("accuracy: ", accuracy_score(y_test, y_pred) * 100)
+  print(confusion_matrix(y_test, y_pred))
+  print(classification_report(y_test, y_pred))
 
   # todo get accuracy, plots, other metrics
 
