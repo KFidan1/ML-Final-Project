@@ -11,6 +11,8 @@ from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score, confusion_matrix, classification_report
 
+import matplotlib.pyplot as plt
+import seaborn as sns
 import joblib
 import pandas as pd
 import nltk
@@ -86,6 +88,19 @@ class NLP:
       print("ml_model saved")
 
 
+def makeGraphs(y_true, y_pred):
+  # todo make more plots
+
+  matrix = confusion_matrix(y_true, y_pred)
+
+  # Draw a heatmap with the numeric values in each cell
+  f, ax = plt.subplots(figsize=(9, 6))
+  sns.heatmap(matrix, annot=True, fmt="d", linewidths=.5, ax=ax, cmap="RdYlGn", \
+              xticklabels=["Not Troll", "Troll"], yticklabels=["Not Troll", "Troll"])
+  plt.ylabel('Predicted')
+  plt.xlabel('Actual')
+  plt.show()
+
 if __name__ == "__main__":
   # read the data, shuffle, and split into train/test
   data = pd.read_csv("./data/dataset.csv", usecols=["content", "annotation"])
@@ -101,13 +116,13 @@ if __name__ == "__main__":
   # get predictions for the test data
   y_pred = nlp.test(x_test)
 
-  print("pred, actual, tweet")
-  for i in range(len(y_pred)-1):
-    print(y_pred[i], y_test[i], x_test[i])
+  # print("pred, actual, tweet")
+  # for i in range(len(y_pred)-1):
+  #   print(y_pred[i], y_test[i], x_test[i])
   print("accuracy: ", accuracy_score(y_test, y_pred) * 100)
   print(confusion_matrix(y_test, y_pred))
   print(classification_report(y_test, y_pred))
 
-  # todo get accuracy, plots, other metrics
+  makeGraphs(y_test, y_pred)
 
 
