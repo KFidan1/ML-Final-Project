@@ -1,4 +1,7 @@
 # natural language processing method of identifying troll text
+# with help from:
+# https://medium.com/@mishra.thedeepak/doc2vec-simple-implementation-example-df2afbbfbad5
+
 
 from gensim.models.doc2vec import Doc2Vec, TaggedDocument
 from nltk.tokenize import word_tokenize
