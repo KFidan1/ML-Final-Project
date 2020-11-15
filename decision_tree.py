@@ -50,3 +50,5 @@ print("Tree Depth = ", decision_tree.get_depth())
 print()
 print("Tree Leaf = ", decision_tree.get_n_leaves())
 print()
+
+print(classification_report(y_test, y_predit.round()))
