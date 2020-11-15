@@ -14,7 +14,7 @@ def warn(*args, **kwargs):
     pass
 import warnings
 warnings.warn = warn
-data = pd.read_csv('data/new_dataset.csv', ',')
+data = pd.read_csv('data/dataset.csv', ',')
 
 features = ['sentence_length', 'compound','neg' , 'neu' , 'pos', 'punctuation_count', 'contain_profanity', 'num_profanity']
 
