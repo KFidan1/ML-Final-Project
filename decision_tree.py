@@ -32,7 +32,7 @@ x_train, x_test, y_train, y_test = train_test_split(X, Y, test_size=0.2, random_
 x_train = preprocessing.scale(x_train)
 x_test = preprocessing.scale(x_test)
 
-decision_tree = tree.DecisionTreeRegressor(max_depth = 5)
+decision_tree = tree.DecisionTreeRegressor(max_depth = 3)
 decision_tree = decision_tree.fit(x_train, y_train)
 y_predit = decision_tree.predict(x_test)
 y_test = y_test.to_numpy()
