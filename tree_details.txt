@@ -1,0 +1,22 @@
+|--- neg <= -0.62
+|   |--- contain_profanity <= 0.18
+|   |   |--- sentence_length <= -0.08
+|   |   |   |--- value: [0.09]
+|   |   |--- sentence_length >  -0.08
+|   |   |   |--- value: [0.22]
+|   |--- contain_profanity >  0.18
+|   |   |--- neg <= -0.64
+|   |   |   |--- value: [0.52]
+|   |   |--- neg >  -0.64
+|   |   |   |--- value: [0.00]
+|--- neg >  -0.62
+|   |--- contain_profanity <= 0.18
+|   |   |--- neg <= 1.39
+|   |   |   |--- value: [0.38]
+|   |   |--- neg >  1.39
+|   |   |   |--- value: [0.58]
+|   |--- contain_profanity >  0.18
+|   |   |--- neg <= 0.34
+|   |   |   |--- value: [0.49]
+|   |   |--- neg >  0.34
+|   |   |   |--- value: [0.67]
