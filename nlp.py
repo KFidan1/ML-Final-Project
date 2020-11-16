@@ -9,6 +9,10 @@ from nltk.corpus import stopwords
 
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LogisticRegression
+from sklearn.naive_bayes import GaussianNB
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.svm import SVC
+from sklearn.tree import DecisionTreeClassifier
 from sklearn.metrics import accuracy_score, confusion_matrix, classification_report
 
 import matplotlib.pyplot as plt
@@ -16,15 +20,87 @@ import seaborn as sns
 import joblib
 import pandas as pd
 import nltk
+import sys
+
 try:
   nltk.data.find('tokenizers/punkt')
 except LookupError:
   nltk.download('punkt')
 
-
 # load the models here, set to None if it should re-train the model
 d2v_loaded = Doc2Vec.load("./models/d2v_1.model")
 ml_loaded = joblib.load("./models/ml_1.model")
+
+classifier_list = ["DecisionTreeClassifier", "GaussianNB", "LogisticRegression", "SVC", "KNeighborsClassifier"]
+
+class NLPTester:
+  def __init__(self, num_vectors=20, single_model = None):
+    self.d2v_model = None
+    self.num_vectors = num_vectors
+    self.single_model = single_model
+    self.ml_models = []
+    self.tup = []
+
+  #TODO, update to support parameters
+  def generate_models(self):
+    print("Generate models")
+    
+    if(self.single_model != None):
+      try:
+        loaded = joblib.load(f"./models/{self.single_model}.model")
+        self.tup.append((loaded, True))
+      except:
+        self.tup.append((LogisticRegression(random_state=0), False))
+    else:
+      for model_name in classifier_list:
+        try:
+          loaded = joblib.load(f"./models/{model_name}.model")
+          self.tup.append((loaded, True))
+        except:
+          self.tup.append((LogisticRegression(random_state=0), False))
+          if(model_name == "DecisionTreeClassifier"):
+            self.tup.append((DecisionTreeClassifier(), False))
+          elif(model_name == "GaussianNB"):
+            self.tup.append((GaussianNB(), False))
+          elif(model_name == "LogisticRegression"):
+            self.tup.append((LogisticRegression(random_state=0), False))
+          elif(model_name == "SVC"):
+            self.tup.append((SVC(kernel='poly', C=10, degree=3), False))
+          elif(model_name == "KNeighborsClassifier"):
+            self.tup.append((KNeighborsClassifier(), False))
+
+  def test_models(self):
+    print("Testing")
+
+    try:
+      self.d2v_model = Doc2Vec.load(f"./models/d2v_{self.num_vectors}.model")
+    except:
+      self.d2v_model = None
+
+    self.generate_models()
+
+    #This is a terrible way to do this, I want something that works though right now.
+    #like this is finna about to take so much memory
+    for model in self.tup:
+      nlp = NLP(self.d2v_model, model[0])
+
+      if(model[1] == False):
+        nlp.train(x_train, y_train ,self.num_vectors)
+
+      #Evil optimization hack
+      self.d2v_model = nlp.d2v_model
+
+      y_pred = nlp.test(x_test)
+
+      # print("pred, actual, tweet")
+      # for i in range(len(y_pred)-1):
+      #   print(y_pred[i], y_test[i], x_test[i])
+      print("accuracy: ", accuracy_score(y_test, y_pred) * 100)
+      print(confusion_matrix(y_test, y_pred))
+      print(classification_report(y_test, y_pred))
+      makeGraphs(y_test, y_pred, model[0].__class__.__name__)
+
+    return
 
 class NLP:
   def __init__(self, d2v_model=None, ml_model=None):
@@ -48,13 +124,15 @@ class NLP:
     y_pred = self.ml_model.predict(x_embedded_array)
     return y_pred
 
-  def train(self, x_train, y_train):
+  def train(self, x_train, y_train, numv):
+    #TODO: Remove duplicate code
     if self.d2v_model is None:
+      print(f"Creating doc2vec for # vectors = {numv}")
       tagged_data = self.tag_data(x_train)
 
       # hyperparameters
       max_epochs = 10
-      vec_size = 20
+      vec_size = numv
       alpha = 0.025
 
       # dm=1 will preserve the word order, dm=0 is the bow where order is ignroed
@@ -71,26 +149,25 @@ class NLP:
         # fix the learning rate, no decay
         self.d2v_model.min_alpha = self.d2v_model.alpha
 
-      self.d2v_model.save("./models/d2v_1.model")
+      self.d2v_model.save(f"./models/d2v_{vec_size}.model")
       print("d2v_model saved")
 
-    if self.ml_model is None:
+    #Fix this to support both fit and unfit, DOES NOT WORK %100 yet
+    if self.ml_model is not None:
       # get word embeddings from the trained d2v model
       x_tagged = self.tag_data(x_train)
       x_embedded_array = [self.d2v_model.infer_vector(x[0]) for x in x_tagged]
 
       # train the ML model from the word embeddings
-      # todo try different models
-      self.ml_model = LogisticRegression(random_state=0)
+      print(self.ml_model.get_params())
       self.ml_model.fit(x_embedded_array, y_train)
-
-      joblib.dump(self.ml_model, "./models/ml_1.model")
+      
+      joblib.dump(self.ml_model, f"./models/{self.ml_model.__class__.__name__}.model")
       print("ml_model saved")
 
 
-def makeGraphs(y_true, y_pred):
+def makeGraphs(y_true, y_pred, name = None):
   # todo make more plots
-
   matrix = confusion_matrix(y_true, y_pred)
 
   # Draw a heatmap with the numeric values in each cell
@@ -99,6 +176,10 @@ def makeGraphs(y_true, y_pred):
               xticklabels=["Not Troll", "Troll"], yticklabels=["Not Troll", "Troll"])
   plt.ylabel('Predicted')
   plt.xlabel('Actual')
+  
+  if(name != None):
+    plt.title(name)
+
   plt.show()
 
 if __name__ == "__main__":
@@ -109,20 +190,10 @@ if __name__ == "__main__":
   Y = data["annotation"]
   x_train, x_test, y_train, y_test = train_test_split(X.to_numpy(), Y.to_numpy(), test_size=0.2, shuffle=False)
 
-  # will only train the models that aren't provided
-  nlp = NLP(d2v_model=d2v_loaded, ml_model=ml_loaded)
-  nlp.train(x_train, y_train)
+  if(len(sys.argv) > 1):
+    inputname = sys.argv[1]
+  else:
+    inputname = None
 
-  # get predictions for the test data
-  y_pred = nlp.test(x_test)
-
-  # print("pred, actual, tweet")
-  # for i in range(len(y_pred)-1):
-  #   print(y_pred[i], y_test[i], x_test[i])
-  print("accuracy: ", accuracy_score(y_test, y_pred) * 100)
-  print(confusion_matrix(y_test, y_pred))
-  print(classification_report(y_test, y_pred))
-
-  makeGraphs(y_test, y_pred)
-
-
+  nlpTester = NLPTester(num_vectors=30, single_model = inputname)
+  nlpTester.test_models()
