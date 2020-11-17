@@ -32,10 +32,32 @@ x_train, x_test, y_train, y_test = train_test_split(X, Y, test_size=0.2, random_
 x_train = preprocessing.scale(x_train)
 x_test = preprocessing.scale(x_test)
 
-decision_tree = tree.DecisionTreeRegressor(max_depth = 3)
+decision_tree = tree.DecisionTreeRegressor()
 decision_tree = decision_tree.fit(x_train, y_train)
 y_predit = decision_tree.predict(x_test)
 y_test = y_test.to_numpy()
+
+print("Tree accuracy \t\t-> ", str(accuracy_score(y_test, y_predit.round())))
+
+#details about the tree
+r = export_text(decision_tree, feature_names = ['sentence_length', 'compound','neg' , 'neu' , 'pos', 'punctuation_count', 'contain_profanity', 'num_profanity'])
+f = open("tree_details.txt", "w")
+f.write(r)
+f.close()
+
+print("Tree Depth = ", decision_tree.get_depth())
+print()
+print("Tree Leaf = ", decision_tree.get_n_leaves())
+print()
+
+print(classification_report(y_test, y_predit.round()))
+
+print("______________________________________NEXT TREE DEPTH = 3______________________________________")
+print()
+
+decision_tree = tree.DecisionTreeRegressor(max_depth = 3)
+decision_tree = decision_tree.fit(x_train, y_train)
+y_predit = decision_tree.predict(x_test)
 
 print("Tree accuracy \t\t-> ", str(accuracy_score(y_test, y_predit.round())))
 
