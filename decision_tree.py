@@ -1,7 +1,8 @@
+
 import numpy as np
 import pandas as pd
 from sklearn import preprocessing
-from sklearn.model_selection import train_test_split 
+from sklearn.model_selection import train_test_split, KFold, cross_validate 
 from sklearn.metrics import classification_report
 from sklearn.metrics import confusion_matrix, accuracy_score
 from sklearn import tree
@@ -29,12 +30,47 @@ Y = pd.to_numeric(Y, downcast="float")
 
 x_train, x_test, y_train, y_test = train_test_split(X, Y, test_size=0.1, shuffle=True)
 
-decision_tree = tree.DecisionTreeRegressor()
-decision_tree = decision_tree.fit(x_train, y_train)
-y_predit = decision_tree.predict(x_test)
-y_test = y_test.to_numpy()
+decision_tree = tree.DecisionTreeClassifier()
 
-print("Tree accuracy -> ", str(accuracy_score(y_test, y_predit.round())))
+'''
+K-Fold cross validation. we can use this on training data to find best combination of hyperparams to test on untouched test data
+'''
+n_splits = 10
+kf = KFold(n_splits=n_splits, shuffle=True)
+
+x = x_train.to_numpy()
+y = y_train.to_numpy()
+
+confusion_overall = [[0,0], [0,0]]
+pred_all = np.array([])
+y_all = np.array([])
+
+# PRINT CONFUSION MATRIX FOR EACH K FOLD (uncomment to print confusion and scores for every k fold)
+for train_index, val_index in kf.split(x):
+    decision_tree.fit(x[train_index], y[train_index])
+    pred = decision_tree.predict(x[val_index])
+    #print(confusion_matrix(y[val_index], pred))
+    #print(classification_report(y[val_index], pred))
+    confusion_overall += confusion_matrix(y[val_index], pred)
+    pred_all = np.concatenate((pred_all, pred))
+    y_all = np.concatenate((y_all, y[val_index]))
+    
+    
+
+print("CONFUSION MATRIX")
+print(confusion_overall)
+print(classification_report(y_all, pred_all))
+
+'''
+scoring = ('precision', 'recall', 'accuracy', 'f1')
+cv_results = cross_validate(decision_tree, X, Y, cv=kf, scoring=scoring, return_train_score=False)
+print(cv_results)
+print("-------AVERAGE RESULTS-------")
+
+for score in scoring:
+    print(score, round(cv_results['test_' + score].mean(), 4))
+'''
+
 
 #details about the tree
 r = export_text(decision_tree, feature_names = ['sentence_length', 'compound','neg' , 'neu' , 'pos', 'punctuation_count', 'contain_profanity', 'num_profanity'])
@@ -46,17 +82,29 @@ print("Tree Depth = ", decision_tree.get_depth())
 print()
 print("Tree Leaf = ", decision_tree.get_n_leaves())
 print()
-
-print(classification_report(y_test, y_predit.round()))
 
 print("______________________________________NEXT TREE DEPTH = 3______________________________________")
 print()
 
-decision_tree = tree.DecisionTreeRegressor(max_depth = 3)
-decision_tree = decision_tree.fit(x_train, y_train)
-y_predit = decision_tree.predict(x_test)
+decision_tree = tree.DecisionTreeClassifier(max_depth = 3)
 
-print("Tree accuracy -> ", str(accuracy_score(y_test, y_predit.round())))
+confusion_overall = [[0,0], [0,0]]
+pred_all = np.array([])
+y_all = np.array([])
+
+# PRINT CONFUSION MATRIX FOR EACH K FOLD (uncomment to print confusion and scores for every k fold)
+for train_index, val_index in kf.split(x):
+    decision_tree.fit(x[train_index], y[train_index])
+    pred = decision_tree.predict(x[val_index])
+    #print(confusion_matrix(y[val_index], pred))
+    #print(classification_report(y[val_index], pred))
+    confusion_overall += confusion_matrix(y[val_index], pred)
+    pred_all = np.concatenate((pred_all, pred))
+    y_all = np.concatenate((y_all, y[val_index]))
+
+print("CONFUSION MATRIX")
+print(confusion_overall)
+print(classification_report(y_all, pred_all))
 
 #details about the tree
 r = export_text(decision_tree, feature_names = ['sentence_length', 'compound','neg' , 'neu' , 'pos', 'punctuation_count', 'contain_profanity', 'num_profanity'])
@@ -68,8 +116,6 @@ print("Tree Depth = ", decision_tree.get_depth())
 print()
 print("Tree Leaf = ", decision_tree.get_n_leaves())
 print()
-
-print(classification_report(y_test, y_predit.round()))
 
 fn= ['sentence_length', 'compound','neg' , 'neu' , 'pos', 'punctuation_count', 'contain_profanity', 'num_profanity']
 cn=['Troll', 'Not Troll']
