@@ -27,11 +27,13 @@ try:
 except LookupError:
   nltk.download('punkt')
 
-# load the models here, set to None if it should re-train the model
-d2v_loaded = Doc2Vec.load("./models/d2v_1.model")
-ml_loaded = joblib.load("./models/ml_1.model")
-
 classifier_list = ["DecisionTreeClassifier", "GaussianNB", "LogisticRegression", "SVC", "KNeighborsClassifier"]
+
+class Classifier:
+  def __init__(self, name, classifier, output):
+    self.name = name
+    self.classifier = classifier
+    self.output = output
 
 class NLPTester:
   def __init__(self, num_vectors=20, single_model = None):
@@ -45,16 +47,18 @@ class NLPTester:
   def generate_models(self):
     print("Generate models")
     
+    #Previous code
     if(self.single_model != None):
       try:
-        loaded = joblib.load(f"./models/{self.single_model}.model")
+        loaded = joblib.load(f"./models/{self.num_vectors} {self.single_model}.model")
         self.tup.append((loaded, True))
       except:
         self.tup.append((LogisticRegression(random_state=0), False))
     else:
       for model_name in classifier_list:
         try:
-          loaded = joblib.load(f"./models/{model_name}.model")
+          loaded = joblib.load(f"./models/{self.num_vectors} {model_name}.model")
+          print("Loaded")
           self.tup.append((loaded, True))
         except:
           self.tup.append((LogisticRegression(random_state=0), False))
@@ -72,20 +76,67 @@ class NLPTester:
   def test_models(self):
     print("Testing")
 
-    try:
-      self.d2v_model = Doc2Vec.load(f"./models/d2v_{self.num_vectors}.model")
-    except:
-      self.d2v_model = None
-
     self.generate_models()
+
+    data = pd.read_csv("./data/classificationdata.csv")
+
+    num_data = data[data["vectors"] == 20]
+    listdata = data[data["classifier"] == 'KNeighborsClassifier']
+    svcdata = data[data["classifier"] == 'SVC']
+
+    #I just need to duplicate this for other classifiers, which is easy
+    svc_obj = []
+    for svc in svcdata.itertuples():
+      try:
+        loaded = joblib.load(f"./models/{self.num_vectors} {svc[2]} {svc[3]} {svc[4]} {svc[5]}.model")
+        svc_obj.append((Classifier("SVC", loaded, svc), True))
+      except:
+        if(svc[3] == "poly"):
+          svc_class = SVC(kernel=svc[3], C=svc[4], degree=svc[5])
+        elif(svc[3] == "rbf"):
+          svc_class = SVC(kernel=svc[3], C=svc[4], gamma=svc[5])
+        elif(svc[3] == "linear"):
+          svc_class = SVC(kernel=svc[3], C=svc[4])
+        svc_obj.append((Classifier("SVC", svc_class, svc), False))
 
     #This is a terrible way to do this, I want something that works though right now.
     #like this is finna about to take so much memory
+    #Also, I think there might be a bug where the first thing gets ran a lot
+    for model in svc_obj:
+      try:
+        d2v = Doc2Vec.load(f"./models/d2v_{self.num_vectors}.model")
+      except:
+        d2v = None
+
+      nlp = NLP(d2v, model[0].classifier)
+
+      print(model[0].output)
+
+      if(model[1] == False):
+        nlp.train(x_train, y_train ,self.num_vectors)
+        svc = model[0].output
+        joblib.dump(nlp.ml_model, f"./models/{self.num_vectors} {svc[2]} {svc[3]} {svc[4]} {svc[5]}.model")
+        
+      #Evil optimization hack
+      self.d2v_model = nlp.d2v_model
+
+      y_pred = nlp.test(x_test)
+
+      # print("pred, actual, tweet")
+      # for i in range(len(y_pred)-1):
+      #   print(y_pred[i], y_test[i], x_test[i])
+      print("accuracy: ", accuracy_score(y_test, y_pred) * 100)
+      print(confusion_matrix(y_test, y_pred))
+      print(classification_report(y_test, y_pred))
+      makeGraphs(y_test, y_pred, str(svc))
+
+    #For normal models, etc.
     for model in self.tup:
       nlp = NLP(self.d2v_model, model[0])
 
       if(model[1] == False):
         nlp.train(x_train, y_train ,self.num_vectors)
+        joblib.dump(nlp.ml_model, f"./models/{self.num_vectors} {nlp.ml_model.__class__.__name__}.model")
 
       #Evil optimization hack
       self.d2v_model = nlp.d2v_model
@@ -99,8 +150,6 @@ class NLPTester:
       print(confusion_matrix(y_test, y_pred))
       print(classification_report(y_test, y_pred))
       makeGraphs(y_test, y_pred, model[0].__class__.__name__)
-
-    return
 
 class NLP:
   def __init__(self, d2v_model=None, ml_model=None):
@@ -159,12 +208,11 @@ class NLP:
       x_embedded_array = [self.d2v_model.infer_vector(x[0]) for x in x_tagged]
 
       # train the ML model from the word embeddings
-      print(self.ml_model.get_params())
+      #print(self.ml_model.get_params())
       self.ml_model.fit(x_embedded_array, y_train)
       
-      joblib.dump(self.ml_model, f"./models/{self.ml_model.__class__.__name__}.model")
+      #joblib.dump(self.ml_model, f"./models/{numv} {self.ml_model.__class__.__name__}.model")
       print("ml_model saved")
-
 
 def makeGraphs(y_true, y_pred, name = None):
   # todo make more plots
@@ -195,5 +243,5 @@ if __name__ == "__main__":
   else:
     inputname = None
 
-  nlpTester = NLPTester(num_vectors=30, single_model = inputname)
+  nlpTester = NLPTester(num_vectors=20, single_model = inputname)
   nlpTester.test_models()
