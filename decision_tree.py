@@ -1,3 +1,4 @@
+
 import numpy as np
 import pandas as pd
 from sklearn import preprocessing
@@ -29,7 +30,7 @@ Y = pd.to_numeric(Y, downcast="float")
 
 x_train, x_test, y_train, y_test = train_test_split(X, Y, test_size=0.1, shuffle=True)
 
-decision_tree = tree.DecisionTreeRegressor()
+decision_tree = tree.DecisionTreeClassifier()
 decision_tree = decision_tree.fit(x_train, y_train)
 y_predit = decision_tree.predict(x_test)
 y_test = y_test.to_numpy()
@@ -52,7 +53,7 @@ print(classification_report(y_test, y_predit.round()))
 print("______________________________________NEXT TREE DEPTH = 3______________________________________")
 print()
 
-decision_tree = tree.DecisionTreeRegressor(max_depth = 3)
+decision_tree = tree.DecisionTreeClassifier(max_depth = 3)
 decision_tree = decision_tree.fit(x_train, y_train)
 y_predit = decision_tree.predict(x_test)
 
