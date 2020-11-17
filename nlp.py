@@ -128,7 +128,7 @@ class NLPTester:
       print("accuracy: ", accuracy_score(y_test, y_pred) * 100)
       print(confusion_matrix(y_test, y_pred))
       print(classification_report(y_test, y_pred))
-      makeGraphs(y_test, y_pred, str(svc))
+      makeGraphs(y_test, y_pred, str(model[0].output))
 
     #For normal models, etc.
     for model in self.tup:
