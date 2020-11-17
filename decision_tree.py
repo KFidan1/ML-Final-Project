@@ -27,17 +27,14 @@ X['num_profanity'] = pd.to_numeric(X['num_profanity'], downcast="float")
 Y = data['annotation']
 Y = pd.to_numeric(Y, downcast="float")
 
-x_train, x_test, y_train, y_test = train_test_split(X, Y, test_size=0.2, random_state=0)
-
-x_train = preprocessing.scale(x_train)
-x_test = preprocessing.scale(x_test)
+x_train, x_test, y_train, y_test = train_test_split(X, Y, test_size=0.1, shuffle=True)
 
 decision_tree = tree.DecisionTreeRegressor()
 decision_tree = decision_tree.fit(x_train, y_train)
 y_predit = decision_tree.predict(x_test)
 y_test = y_test.to_numpy()
 
-print("Tree accuracy \t\t-> ", str(accuracy_score(y_test, y_predit.round())))
+print("Tree accuracy -> ", str(accuracy_score(y_test, y_predit.round())))
 
 #details about the tree
 r = export_text(decision_tree, feature_names = ['sentence_length', 'compound','neg' , 'neu' , 'pos', 'punctuation_count', 'contain_profanity', 'num_profanity'])
@@ -59,7 +56,7 @@ decision_tree = tree.DecisionTreeRegressor(max_depth = 3)
 decision_tree = decision_tree.fit(x_train, y_train)
 y_predit = decision_tree.predict(x_test)
 
-print("Tree accuracy \t\t-> ", str(accuracy_score(y_test, y_predit.round())))
+print("Tree accuracy -> ", str(accuracy_score(y_test, y_predit.round())))
 
 #details about the tree
 r = export_text(decision_tree, feature_names = ['sentence_length', 'compound','neg' , 'neu' , 'pos', 'punctuation_count', 'contain_profanity', 'num_profanity'])
