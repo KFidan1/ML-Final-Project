@@ -27,8 +27,6 @@ try:
 except LookupError:
   nltk.download('punkt')
 
-classifier_list = ["DecisionTreeClassifier", "GaussianNB", "LogisticRegression", "SVC", "KNeighborsClassifier"]
-
 class Classifier:
   def __init__(self, name, classifier, output):
     self.name = name
@@ -46,50 +44,29 @@ class NLPTester:
   #TODO, update to support parameters
   def generate_models(self):
     print("Generate models")
-    
-    #Previous code
+
+    models = []
+    #This actually doesn't work yet
     if(self.single_model != None):
       try:
-        loaded = joblib.load(f"./models/{self.num_vectors} {self.single_model}.model")
-        self.tup.append((loaded, True))
+        print(self.single_model)
+        loaded = joblib.load(self.single_model)
+        return models.append(Classifier("SVC", loaded, []), True)
       except:
-        self.tup.append((LogisticRegression(random_state=0), False))
-    else:
-      for model_name in classifier_list:
-        try:
-          loaded = joblib.load(f"./models/{self.num_vectors} {model_name}.model")
-          print("Loaded")
-          self.tup.append((loaded, True))
-        except:
-          self.tup.append((LogisticRegression(random_state=0), False))
-          if(model_name == "DecisionTreeClassifier"):
-            self.tup.append((DecisionTreeClassifier(), False))
-          elif(model_name == "GaussianNB"):
-            self.tup.append((GaussianNB(), False))
-          elif(model_name == "LogisticRegression"):
-            self.tup.append((LogisticRegression(random_state=0), False))
-          elif(model_name == "SVC"):
-            self.tup.append((SVC(kernel='poly', C=10, degree=3), False))
-          elif(model_name == "KNeighborsClassifier"):
-            self.tup.append((KNeighborsClassifier(), False))
-
-  def test_models(self):
-    print("Testing")
-
-    self.generate_models()
+        print("File doesn't exist, exiting program")
+        sys.exit()
 
     data = pd.read_csv("./data/classificationdata.csv")
-
-    num_data = data[data["vectors"] == 20]
-    listdata = data[data["classifier"] == 'KNeighborsClassifier']
+    gaussdata = data[data["classifier"] == 'GaussianNB']
+    knndata = data[data["classifier"] == 'KNeighborsClassifier']
     svcdata = data[data["classifier"] == 'SVC']
+    logdata = data[data["classifier"] == 'LogisticRegression']
 
     #I just need to duplicate this for other classifiers, which is easy
-    svc_obj = []
     for svc in svcdata.itertuples():
       try:
-        loaded = joblib.load(f"./models/{self.num_vectors} {svc[2]} {svc[3]} {svc[4]} {svc[5]}.model")
-        svc_obj.append((Classifier("SVC", loaded, svc), True))
+        loaded = joblib.load(f"./models/{svc[1]} {svc[2]} {svc[3]} {svc[4]} {svc[5]}.model")
+        models.append((Classifier("SVC", loaded, svc), True))
       except:
         if(svc[3] == "poly"):
           svc_class = SVC(kernel=svc[3], C=svc[4], degree=svc[5])
@@ -97,28 +74,60 @@ class NLPTester:
           svc_class = SVC(kernel=svc[3], C=svc[4], gamma=svc[5])
         elif(svc[3] == "linear"):
           svc_class = SVC(kernel=svc[3], C=svc[4])
-        svc_obj.append((Classifier("SVC", svc_class, svc), False))
+        models.append((Classifier("SVC", svc_class, svc), False))
+
+    for knn in knndata.itertuples():
+      try:
+        loaded = joblib.load(f"./models/{knn[1]} {knn[2]} {knn[3]}.model")
+        models.append((Classifier("KNeighborsClassifier", loaded, knn), True))
+      except:
+        knn_class = KNeighborsClassifier(n_neighbors=int(knn[3]))
+        models.append((Classifier("KNeighborsClassifier", knn_class, knn), False))
+
+    for gaussian in gaussdata.itertuples():
+      try:
+        loaded = joblib.load(f"./models/{gaussian[1]} {gaussian[2]} {gaussian[3]}.model")
+        models.append((Classifier("GaussianNB", loaded, gaussian), True))
+      except:
+        gaussian_class = GaussianNB(var_smoothing = float(gaussian[3]))
+        models.append((Classifier("GaussianNB", gaussian_class, gaussian), False))
+
+    for logistic in logdata.itertuples():
+      try:
+        loaded = joblib.load(f"./models/{logistic[1]} {logistic[2]} {logistic[3]}.model")
+        models.append((Classifier("LogisticRegression", loaded, logistic), True))
+      except:
+        logistic_class = LogisticRegression(C = int(logistic[3]))
+        models.append((Classifier("LogisticRegression", logistic_class, logistic), False))
+
+    return models
+  
+  def test_models(self):
+    print("Testing")
+
+    svc_obj = self.generate_models()
 
     #This is a terrible way to do this, I want something that works though right now.
     #like this is finna about to take so much memory
     #Also, I think there might be a bug where the first thing gets ran a lot
     for model in svc_obj:
+      svc = model[0].output
       try:
-        d2v = Doc2Vec.load(f"./models/d2v_{self.num_vectors}.model")
+        d2v = Doc2Vec.load(f"./models/d2v_{svc[1]}.model")
       except:
         d2v = None
 
       nlp = NLP(d2v, model[0].classifier)
 
       print(model[0].output)
-
       if(model[1] == False):
-        nlp.train(x_train, y_train ,self.num_vectors)
-        svc = model[0].output
-        joblib.dump(nlp.ml_model, f"./models/{self.num_vectors} {svc[2]} {svc[3]} {svc[4]} {svc[5]}.model")
-        
-      #Evil optimization hack
-      self.d2v_model = nlp.d2v_model
+        nlp.train(x_train, y_train, svc[1])
+        if(model[0].name == "SVC"):
+          joblib.dump(nlp.ml_model, f"./models/{svc[1]} {svc[2]} {svc[3]} {svc[4]} {svc[5]}.model")
+        else:
+          joblib.dump(nlp.ml_model, f"./models/{svc[1]} {svc[2]} {svc[3]}.model")
+      else:
+        print("Loading existing model")
 
       y_pred = nlp.test(x_test)
 
@@ -129,27 +138,6 @@ class NLPTester:
       print(confusion_matrix(y_test, y_pred))
       print(classification_report(y_test, y_pred))
       makeGraphs(y_test, y_pred, str(model[0].output))
-
-    #For normal models, etc.
-    for model in self.tup:
-      nlp = NLP(self.d2v_model, model[0])
-
-      if(model[1] == False):
-        nlp.train(x_train, y_train ,self.num_vectors)
-        joblib.dump(nlp.ml_model, f"./models/{self.num_vectors} {nlp.ml_model.__class__.__name__}.model")
-
-      #Evil optimization hack
-      self.d2v_model = nlp.d2v_model
-
-      y_pred = nlp.test(x_test)
-
-      # print("pred, actual, tweet")
-      # for i in range(len(y_pred)-1):
-      #   print(y_pred[i], y_test[i], x_test[i])
-      print("accuracy: ", accuracy_score(y_test, y_pred) * 100)
-      print(confusion_matrix(y_test, y_pred))
-      print(classification_report(y_test, y_pred))
-      makeGraphs(y_test, y_pred, model[0].__class__.__name__)
 
 class NLP:
   def __init__(self, d2v_model=None, ml_model=None):

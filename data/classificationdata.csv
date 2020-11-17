@@ -1,8 +1,8 @@
 vectors,classifier,misc1,misc2,misc3
 20,KNeighborsClassifier,5,0,0
 20,KNeighborsClassifier,10,0,0
-20,DecisionTreeClassifier,3,0,0
-20,GaussianNB,0,0,0
+20,GaussianNB,1e-9,0,0
+20,SVC,"poly",500,2
 20,SVC,"poly",10,3
 20,SVC,"poly",20,3
 20,SVC,"rbf",10,3
@@ -14,4 +14,9 @@ vectors,classifier,misc1,misc2,misc3
 25,KNeighborsClassifier,5,0,0
 25,KNeighborsClassifier,10,0,0
 25,DecisionTreeClassifier,3,0,0
-25,GaussianNB,0,0,0
+30,DecisionTreeClassifier,10,0,0
+25,GaussianNB,1e-8,0,0
+30,GaussianNB,1e-9,0,0
+20,LogisticRegression,1,0,0
+20,LogisticRegression,10,0,0
+20,LogisticRegression,100,0,0
