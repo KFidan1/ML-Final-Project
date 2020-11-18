@@ -2,7 +2,7 @@
 import numpy as np
 import pandas as pd
 from sklearn import preprocessing
-from sklearn.model_selection import train_test_split, KFold, cross_validate 
+from sklearn.model_selection import train_test_split, GridSearchCV 
 from sklearn.metrics import classification_report
 from sklearn.metrics import confusion_matrix, accuracy_score
 from sklearn import tree
@@ -30,46 +30,69 @@ Y = pd.to_numeric(Y, downcast="float")
 
 x_train, x_test, y_train, y_test = train_test_split(X, Y, test_size=0.1, shuffle=True)
 
+#Running with no hyperparameters
 decision_tree = tree.DecisionTreeClassifier()
+decision_tree.fit(x_train, y_train)
+pred = decision_tree.predict(x_test)
 
-'''
-K-Fold cross validation. we can use this on training data to find best combination of hyperparams to test on untouched test data
-'''
-n_splits = 10
-kf = KFold(n_splits=n_splits, shuffle=True)
+print("-----RESULTS OF NO HYPERPARAMETERS------")
+print(confusion_matrix(y_test, pred))
+print(classification_report(y_test, pred))
 
-x = x_train.to_numpy()
-y = y_train.to_numpy()
+print("Tree Depth = ", decision_tree.get_depth())
+print()
+print("Tree Leaf = ", decision_tree.get_n_leaves())
+print()
 
-confusion_overall = [[0,0], [0,0]]
-pred_all = np.array([])
-y_all = np.array([])
 
-# PRINT CONFUSION MATRIX FOR EACH K FOLD (uncomment to print confusion and scores for every k fold)
-for train_index, val_index in kf.split(x):
-    decision_tree.fit(x[train_index], y[train_index])
-    pred = decision_tree.predict(x[val_index])
-    #print(confusion_matrix(y[val_index], pred))
-    #print(classification_report(y[val_index], pred))
-    confusion_overall += confusion_matrix(y[val_index], pred)
-    pred_all = np.concatenate((pred_all, pred))
-    y_all = np.concatenate((y_all, y[val_index]))
-    
-    
 
-print("CONFUSION MATRIX")
-print(confusion_overall)
-print(classification_report(y_all, pred_all))
+tuned_parameters = [
+    {
+        'max_depth': [2, 4, 6, 10, 20, 30, 40, 80],
+        'min_impurity_decrease': [1e-1, 1e-2, 1e-3, 1e-4]
+    }
+]
 
-'''
-scoring = ('precision', 'recall', 'accuracy', 'f1')
-cv_results = cross_validate(decision_tree, X, Y, cv=kf, scoring=scoring, return_train_score=False)
-print(cv_results)
-print("-------AVERAGE RESULTS-------")
+scoring = ('precision', 'recall','accuracy')
 
 for score in scoring:
-    print(score, round(cv_results['test_' + score].mean(), 4))
-'''
+        clf = GridSearchCV(decision_tree, tuned_parameters, scoring=score, refit = "accuracy",return_train_score=True)
+        clf.fit(x_train, y_train)
+
+        print("best parameters are: ")
+        print(clf.best_params_)
+        if(score == "accuracy"):
+                best = clf.best_params_
+        print("Grid scores on development set:")
+        print()
+        
+        
+        means = clf.cv_results_['mean_test_score']
+        stds = clf.cv_results_['std_test_score']
+        for mean, std, params in zip(means, stds, clf.cv_results_['params']):
+            print("%0.3f (+/-%0.03f) for %r"
+                  % (mean, std * 2, params))
+        print()
+
+        print("Detailed classification report:")
+        print()
+        print("The model is trained on the full development set.")
+        print("The scores are computed on the full evaluation set.")
+        print()
+        y_true, y_pred = y_test, clf.predict(x_test)
+        print(classification_report(y_true, y_pred))
+        print()
+        
+
+print("-----BEST HYPERPARAMETERS---------")
+print(best)
+decision_tree = tree.DecisionTreeClassifier(max_depth=best['max_depth'], min_impurity_decrease=best['min_impurity_decrease'])
+decision_tree.fit(x_train, y_train)
+pred = decision_tree.predict(x_test)
+
+print("-----RESULTS OF BEST HYPERPARAMETERS------")
+print(confusion_matrix(y_test, pred))
+print(classification_report(y_test, pred))
 
 
 #details about the tree
@@ -83,39 +106,6 @@ print()
 print("Tree Leaf = ", decision_tree.get_n_leaves())
 print()
 
-print("______________________________________NEXT TREE DEPTH = 3______________________________________")
-print()
-
-decision_tree = tree.DecisionTreeClassifier(max_depth = 3)
-
-confusion_overall = [[0,0], [0,0]]
-pred_all = np.array([])
-y_all = np.array([])
-
-# PRINT CONFUSION MATRIX FOR EACH K FOLD (uncomment to print confusion and scores for every k fold)
-for train_index, val_index in kf.split(x):
-    decision_tree.fit(x[train_index], y[train_index])
-    pred = decision_tree.predict(x[val_index])
-    #print(confusion_matrix(y[val_index], pred))
-    #print(classification_report(y[val_index], pred))
-    confusion_overall += confusion_matrix(y[val_index], pred)
-    pred_all = np.concatenate((pred_all, pred))
-    y_all = np.concatenate((y_all, y[val_index]))
-
-print("CONFUSION MATRIX")
-print(confusion_overall)
-print(classification_report(y_all, pred_all))
-
-#details about the tree
-r = export_text(decision_tree, feature_names = ['sentence_length', 'compound','neg' , 'neu' , 'pos', 'punctuation_count', 'contain_profanity', 'num_profanity'])
-f = open("tree_details.txt", "w")
-f.write(r)
-f.close()
-
-print("Tree Depth = ", decision_tree.get_depth())
-print()
-print("Tree Leaf = ", decision_tree.get_n_leaves())
-print()
 
 fn= ['sentence_length', 'compound','neg' , 'neu' , 'pos', 'punctuation_count', 'contain_profanity', 'num_profanity']
 cn=['Troll', 'Not Troll']

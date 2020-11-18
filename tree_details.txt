@@ -1,22 +1,883 @@
 |--- neg <= 0.08
 |   |--- contain_profanity <= 0.50
 |   |   |--- sentence_length <= 43.50
-|   |   |   |--- class: 0.0
+|   |   |   |--- punctuation_count <= 0.05
+|   |   |   |   |--- sentence_length <= 1.50
+|   |   |   |   |   |--- class: 0.0
+|   |   |   |   |--- sentence_length >  1.50
+|   |   |   |   |   |--- pos <= 0.49
+|   |   |   |   |   |   |--- pos <= 0.48
+|   |   |   |   |   |   |   |--- class: 0.0
+|   |   |   |   |   |   |--- pos >  0.48
+|   |   |   |   |   |   |   |--- pos <= 0.48
+|   |   |   |   |   |   |   |   |--- class: 1.0
+|   |   |   |   |   |   |   |--- pos >  0.48
+|   |   |   |   |   |   |   |   |--- neu <= 0.51
+|   |   |   |   |   |   |   |   |   |--- class: 1.0
+|   |   |   |   |   |   |   |   |--- neu >  0.51
+|   |   |   |   |   |   |   |   |   |--- class: 0.0
+|   |   |   |   |   |--- pos >  0.49
+|   |   |   |   |   |   |--- class: 0.0
+|   |   |   |--- punctuation_count >  0.05
+|   |   |   |   |--- sentence_length <= 28.50
+|   |   |   |   |   |--- class: 0.0
+|   |   |   |   |--- sentence_length >  28.50
+|   |   |   |   |   |--- punctuation_count <= 0.17
+|   |   |   |   |   |   |--- punctuation_count <= 0.05
+|   |   |   |   |   |   |   |--- neu <= 0.61
+|   |   |   |   |   |   |   |   |--- class: 1.0
+|   |   |   |   |   |   |   |--- neu >  0.61
+|   |   |   |   |   |   |   |   |--- class: 0.0
+|   |   |   |   |   |   |--- punctuation_count >  0.05
+|   |   |   |   |   |   |   |--- compound <= 0.42
+|   |   |   |   |   |   |   |   |--- sentence_length <= 34.50
+|   |   |   |   |   |   |   |   |   |--- punctuation_count <= 0.10
+|   |   |   |   |   |   |   |   |   |   |--- compound <= 0.23
+|   |   |   |   |   |   |   |   |   |   |   |--- truncated branch of depth 2
+|   |   |   |   |   |   |   |   |   |   |--- compound >  0.23
+|   |   |   |   |   |   |   |   |   |   |   |--- truncated branch of depth 2
+|   |   |   |   |   |   |   |   |   |--- punctuation_count >  0.10
+|   |   |   |   |   |   |   |   |   |   |--- punctuation_count <= 0.10
+|   |   |   |   |   |   |   |   |   |   |   |--- class: 1.0
+|   |   |   |   |   |   |   |   |   |   |--- punctuation_count >  0.10
+|   |   |   |   |   |   |   |   |   |   |   |--- class: 0.0
+|   |   |   |   |   |   |   |   |--- sentence_length >  34.50
+|   |   |   |   |   |   |   |   |   |--- compound <= 0.41
+|   |   |   |   |   |   |   |   |   |   |--- class: 0.0
+|   |   |   |   |   |   |   |   |   |--- compound >  0.41
+|   |   |   |   |   |   |   |   |   |   |--- class: 1.0
+|   |   |   |   |   |   |   |--- compound >  0.42
+|   |   |   |   |   |   |   |   |--- compound <= 0.78
+|   |   |   |   |   |   |   |   |   |--- class: 0.0
+|   |   |   |   |   |   |   |   |--- compound >  0.78
+|   |   |   |   |   |   |   |   |   |--- punctuation_count <= 0.06
+|   |   |   |   |   |   |   |   |   |   |--- class: 1.0
+|   |   |   |   |   |   |   |   |   |--- punctuation_count >  0.06
+|   |   |   |   |   |   |   |   |   |   |--- class: 0.0
+|   |   |   |   |   |--- punctuation_count >  0.17
+|   |   |   |   |   |   |--- compound <= 0.64
+|   |   |   |   |   |   |   |--- sentence_length <= 36.00
+|   |   |   |   |   |   |   |   |--- class: 1.0
+|   |   |   |   |   |   |   |--- sentence_length >  36.00
+|   |   |   |   |   |   |   |   |--- class: 0.0
+|   |   |   |   |   |   |--- compound >  0.64
+|   |   |   |   |   |   |   |--- class: 0.0
 |   |   |--- sentence_length >  43.50
-|   |   |   |--- class: 0.0
+|   |   |   |--- punctuation_count <= 0.05
+|   |   |   |   |--- sentence_length <= 138.50
+|   |   |   |   |   |--- sentence_length <= 121.50
+|   |   |   |   |   |   |--- compound <= 0.98
+|   |   |   |   |   |   |   |--- neg <= 0.07
+|   |   |   |   |   |   |   |   |--- neu <= 0.51
+|   |   |   |   |   |   |   |   |   |--- class: 0.0
+|   |   |   |   |   |   |   |   |--- neu >  0.51
+|   |   |   |   |   |   |   |   |   |--- neu <= 0.52
+|   |   |   |   |   |   |   |   |   |   |--- class: 1.0
+|   |   |   |   |   |   |   |   |   |--- neu >  0.52
+|   |   |   |   |   |   |   |   |   |   |--- compound <= 0.47
+|   |   |   |   |   |   |   |   |   |   |   |--- truncated branch of depth 7
+|   |   |   |   |   |   |   |   |   |   |--- compound >  0.47
+|   |   |   |   |   |   |   |   |   |   |   |--- truncated branch of depth 13
+|   |   |   |   |   |   |   |--- neg >  0.07
+|   |   |   |   |   |   |   |   |--- neg <= 0.07
+|   |   |   |   |   |   |   |   |   |--- punctuation_count <= 0.01
+|   |   |   |   |   |   |   |   |   |   |--- class: 1.0
+|   |   |   |   |   |   |   |   |   |--- punctuation_count >  0.01
+|   |   |   |   |   |   |   |   |   |   |--- neg <= 0.07
+|   |   |   |   |   |   |   |   |   |   |   |--- truncated branch of depth 2
+|   |   |   |   |   |   |   |   |   |   |--- neg >  0.07
+|   |   |   |   |   |   |   |   |   |   |   |--- class: 0.0
+|   |   |   |   |   |   |   |   |--- neg >  0.07
+|   |   |   |   |   |   |   |   |   |--- class: 0.0
+|   |   |   |   |   |   |--- compound >  0.98
+|   |   |   |   |   |   |   |--- class: 1.0
+|   |   |   |   |   |--- sentence_length >  121.50
+|   |   |   |   |   |   |--- pos <= 0.20
+|   |   |   |   |   |   |   |--- compound <= 0.54
+|   |   |   |   |   |   |   |   |--- neu <= 0.89
+|   |   |   |   |   |   |   |   |   |--- class: 0.0
+|   |   |   |   |   |   |   |   |--- neu >  0.89
+|   |   |   |   |   |   |   |   |   |--- pos <= 0.08
+|   |   |   |   |   |   |   |   |   |   |--- neu <= 0.98
+|   |   |   |   |   |   |   |   |   |   |   |--- class: 0.0
+|   |   |   |   |   |   |   |   |   |   |--- neu >  0.98
+|   |   |   |   |   |   |   |   |   |   |   |--- class: 0.0
+|   |   |   |   |   |   |   |   |   |--- pos >  0.08
+|   |   |   |   |   |   |   |   |   |   |--- punctuation_count <= 0.02
+|   |   |   |   |   |   |   |   |   |   |   |--- class: 1.0
+|   |   |   |   |   |   |   |   |   |   |--- punctuation_count >  0.02
+|   |   |   |   |   |   |   |   |   |   |   |--- truncated branch of depth 2
+|   |   |   |   |   |   |   |--- compound >  0.54
+|   |   |   |   |   |   |   |   |--- compound <= 0.70
+|   |   |   |   |   |   |   |   |   |--- neg <= 0.07
+|   |   |   |   |   |   |   |   |   |   |--- neu <= 0.80
+|   |   |   |   |   |   |   |   |   |   |   |--- class: 1.0
+|   |   |   |   |   |   |   |   |   |   |--- neu >  0.80
+|   |   |   |   |   |   |   |   |   |   |   |--- truncated branch of depth 2
+|   |   |   |   |   |   |   |   |   |--- neg >  0.07
+|   |   |   |   |   |   |   |   |   |   |--- class: 0.0
+|   |   |   |   |   |   |   |   |--- compound >  0.70
+|   |   |   |   |   |   |   |   |   |--- class: 0.0
+|   |   |   |   |   |   |--- pos >  0.20
+|   |   |   |   |   |   |   |--- neu <= 0.66
+|   |   |   |   |   |   |   |   |--- sentence_length <= 122.50
+|   |   |   |   |   |   |   |   |   |--- class: 1.0
+|   |   |   |   |   |   |   |   |--- sentence_length >  122.50
+|   |   |   |   |   |   |   |   |   |--- neu <= 0.63
+|   |   |   |   |   |   |   |   |   |   |--- class: 0.0
+|   |   |   |   |   |   |   |   |   |--- neu >  0.63
+|   |   |   |   |   |   |   |   |   |   |--- class: 1.0
+|   |   |   |   |   |   |   |--- neu >  0.66
+|   |   |   |   |   |   |   |   |--- class: 0.0
+|   |   |   |   |--- sentence_length >  138.50
+|   |   |   |   |   |--- class: 0.0
+|   |   |   |--- punctuation_count >  0.05
+|   |   |   |   |--- pos <= 0.25
+|   |   |   |   |   |--- sentence_length <= 63.50
+|   |   |   |   |   |   |--- punctuation_count <= 0.21
+|   |   |   |   |   |   |   |--- punctuation_count <= 0.05
+|   |   |   |   |   |   |   |   |--- pos <= 0.14
+|   |   |   |   |   |   |   |   |   |--- class: 0.0
+|   |   |   |   |   |   |   |   |--- pos >  0.14
+|   |   |   |   |   |   |   |   |   |--- neu <= 0.78
+|   |   |   |   |   |   |   |   |   |   |--- class: 0.0
+|   |   |   |   |   |   |   |   |   |--- neu >  0.78
+|   |   |   |   |   |   |   |   |   |   |--- class: 1.0
+|   |   |   |   |   |   |   |--- punctuation_count >  0.05
+|   |   |   |   |   |   |   |   |--- sentence_length <= 48.50
+|   |   |   |   |   |   |   |   |   |--- class: 0.0
+|   |   |   |   |   |   |   |   |--- sentence_length >  48.50
+|   |   |   |   |   |   |   |   |   |--- class: 0.0
+|   |   |   |   |   |   |--- punctuation_count >  0.21
+|   |   |   |   |   |   |   |--- class: 1.0
+|   |   |   |   |   |--- sentence_length >  63.50
+|   |   |   |   |   |   |--- pos <= 0.20
+|   |   |   |   |   |   |   |--- sentence_length <= 127.00
+|   |   |   |   |   |   |   |   |--- compound <= 0.51
+|   |   |   |   |   |   |   |   |   |--- sentence_length <= 118.50
+|   |   |   |   |   |   |   |   |   |   |--- sentence_length <= 105.50
+|   |   |   |   |   |   |   |   |   |   |   |--- truncated branch of depth 3
+|   |   |   |   |   |   |   |   |   |   |--- sentence_length >  105.50
+|   |   |   |   |   |   |   |   |   |   |   |--- class: 0.0
+|   |   |   |   |   |   |   |   |   |--- sentence_length >  118.50
+|   |   |   |   |   |   |   |   |   |   |--- class: 1.0
+|   |   |   |   |   |   |   |   |--- compound >  0.51
+|   |   |   |   |   |   |   |   |   |--- class: 0.0
+|   |   |   |   |   |   |   |--- sentence_length >  127.00
+|   |   |   |   |   |   |   |   |--- class: 0.0
+|   |   |   |   |   |   |--- pos >  0.20
+|   |   |   |   |   |   |   |--- pos <= 0.20
+|   |   |   |   |   |   |   |   |--- class: 1.0
+|   |   |   |   |   |   |   |--- pos >  0.20
+|   |   |   |   |   |   |   |   |--- neu <= 0.72
+|   |   |   |   |   |   |   |   |   |--- class: 0.0
+|   |   |   |   |   |   |   |   |--- neu >  0.72
+|   |   |   |   |   |   |   |   |   |--- neu <= 0.76
+|   |   |   |   |   |   |   |   |   |   |--- class: 1.0
+|   |   |   |   |   |   |   |   |   |--- neu >  0.76
+|   |   |   |   |   |   |   |   |   |   |--- punctuation_count <= 0.08
+|   |   |   |   |   |   |   |   |   |   |   |--- truncated branch of depth 5
+|   |   |   |   |   |   |   |   |   |   |--- punctuation_count >  0.08
+|   |   |   |   |   |   |   |   |   |   |   |--- class: 0.0
+|   |   |   |   |--- pos >  0.25
+|   |   |   |   |   |--- punctuation_count <= 0.17
+|   |   |   |   |   |   |--- compound <= 0.73
+|   |   |   |   |   |   |   |--- class: 0.0
+|   |   |   |   |   |   |--- compound >  0.73
+|   |   |   |   |   |   |   |--- sentence_length <= 54.50
+|   |   |   |   |   |   |   |   |--- neu <= 0.49
+|   |   |   |   |   |   |   |   |   |--- class: 0.0
+|   |   |   |   |   |   |   |   |--- neu >  0.49
+|   |   |   |   |   |   |   |   |   |--- punctuation_count <= 0.10
+|   |   |   |   |   |   |   |   |   |   |--- class: 1.0
+|   |   |   |   |   |   |   |   |   |--- punctuation_count >  0.10
+|   |   |   |   |   |   |   |   |   |   |--- class: 0.0
+|   |   |   |   |   |   |   |--- sentence_length >  54.50
+|   |   |   |   |   |   |   |   |--- compound <= 0.74
+|   |   |   |   |   |   |   |   |   |--- class: 1.0
+|   |   |   |   |   |   |   |   |--- compound >  0.74
+|   |   |   |   |   |   |   |   |   |--- punctuation_count <= 0.06
+|   |   |   |   |   |   |   |   |   |   |--- punctuation_count <= 0.06
+|   |   |   |   |   |   |   |   |   |   |   |--- truncated branch of depth 4
+|   |   |   |   |   |   |   |   |   |   |--- punctuation_count >  0.06
+|   |   |   |   |   |   |   |   |   |   |   |--- class: 1.0
+|   |   |   |   |   |   |   |   |   |--- punctuation_count >  0.06
+|   |   |   |   |   |   |   |   |   |   |--- class: 0.0
+|   |   |   |   |   |--- punctuation_count >  0.17
+|   |   |   |   |   |   |--- pos <= 0.48
+|   |   |   |   |   |   |   |--- class: 1.0
+|   |   |   |   |   |   |--- pos >  0.48
+|   |   |   |   |   |   |   |--- class: 0.0
 |   |--- contain_profanity >  0.50
-|   |   |--- neg <= 0.07
-|   |   |   |--- class: 1.0
-|   |   |--- neg >  0.07
-|   |   |   |--- class: 0.0
+|   |   |--- compound <= 0.61
+|   |   |   |--- punctuation_count <= 0.09
+|   |   |   |   |--- neg <= 0.07
+|   |   |   |   |   |--- sentence_length <= 63.50
+|   |   |   |   |   |   |--- punctuation_count <= 0.07
+|   |   |   |   |   |   |   |--- sentence_length <= 16.50
+|   |   |   |   |   |   |   |   |--- class: 1.0
+|   |   |   |   |   |   |   |--- sentence_length >  16.50
+|   |   |   |   |   |   |   |   |--- neu <= 0.64
+|   |   |   |   |   |   |   |   |   |--- compound <= 0.44
+|   |   |   |   |   |   |   |   |   |   |--- class: 1.0
+|   |   |   |   |   |   |   |   |   |--- compound >  0.44
+|   |   |   |   |   |   |   |   |   |   |--- punctuation_count <= 0.04
+|   |   |   |   |   |   |   |   |   |   |   |--- truncated branch of depth 2
+|   |   |   |   |   |   |   |   |   |   |--- punctuation_count >  0.04
+|   |   |   |   |   |   |   |   |   |   |   |--- class: 0.0
+|   |   |   |   |   |   |   |   |--- neu >  0.64
+|   |   |   |   |   |   |   |   |   |--- compound <= 0.39
+|   |   |   |   |   |   |   |   |   |   |--- punctuation_count <= 0.05
+|   |   |   |   |   |   |   |   |   |   |   |--- truncated branch of depth 9
+|   |   |   |   |   |   |   |   |   |   |--- punctuation_count >  0.05
+|   |   |   |   |   |   |   |   |   |   |   |--- class: 0.0
+|   |   |   |   |   |   |   |   |   |--- compound >  0.39
+|   |   |   |   |   |   |   |   |   |   |--- class: 0.0
+|   |   |   |   |   |   |--- punctuation_count >  0.07
+|   |   |   |   |   |   |   |--- compound <= 0.15
+|   |   |   |   |   |   |   |   |--- class: 1.0
+|   |   |   |   |   |   |   |--- compound >  0.15
+|   |   |   |   |   |   |   |   |--- sentence_length <= 46.50
+|   |   |   |   |   |   |   |   |   |--- class: 1.0
+|   |   |   |   |   |   |   |   |--- sentence_length >  46.50
+|   |   |   |   |   |   |   |   |   |--- class: 0.0
+|   |   |   |   |   |--- sentence_length >  63.50
+|   |   |   |   |   |   |--- punctuation_count <= 0.02
+|   |   |   |   |   |   |   |--- class: 1.0
+|   |   |   |   |   |   |--- punctuation_count >  0.02
+|   |   |   |   |   |   |   |--- sentence_length <= 101.50
+|   |   |   |   |   |   |   |   |--- punctuation_count <= 0.02
+|   |   |   |   |   |   |   |   |   |--- class: 0.0
+|   |   |   |   |   |   |   |   |--- punctuation_count >  0.02
+|   |   |   |   |   |   |   |   |   |--- neu <= 0.68
+|   |   |   |   |   |   |   |   |   |   |--- class: 0.0
+|   |   |   |   |   |   |   |   |   |--- neu >  0.68
+|   |   |   |   |   |   |   |   |   |   |--- class: 1.0
+|   |   |   |   |   |   |   |--- sentence_length >  101.50
+|   |   |   |   |   |   |   |   |--- pos <= 0.18
+|   |   |   |   |   |   |   |   |   |--- sentence_length <= 114.00
+|   |   |   |   |   |   |   |   |   |   |--- class: 0.0
+|   |   |   |   |   |   |   |   |   |--- sentence_length >  114.00
+|   |   |   |   |   |   |   |   |   |   |--- punctuation_count <= 0.03
+|   |   |   |   |   |   |   |   |   |   |   |--- truncated branch of depth 2
+|   |   |   |   |   |   |   |   |   |   |--- punctuation_count >  0.03
+|   |   |   |   |   |   |   |   |   |   |   |--- truncated branch of depth 3
+|   |   |   |   |   |   |   |   |--- pos >  0.18
+|   |   |   |   |   |   |   |   |   |--- class: 1.0
+|   |   |   |   |--- neg >  0.07
+|   |   |   |   |   |--- class: 0.0
+|   |   |   |--- punctuation_count >  0.09
+|   |   |   |   |--- sentence_length <= 31.50
+|   |   |   |   |   |--- punctuation_count <= 0.11
+|   |   |   |   |   |   |--- class: 0.0
+|   |   |   |   |   |--- punctuation_count >  0.11
+|   |   |   |   |   |   |--- class: 1.0
+|   |   |   |   |--- sentence_length >  31.50
+|   |   |   |   |   |--- sentence_length <= 128.50
+|   |   |   |   |   |   |--- compound <= 0.25
+|   |   |   |   |   |   |   |--- sentence_length <= 85.00
+|   |   |   |   |   |   |   |   |--- neu <= 0.86
+|   |   |   |   |   |   |   |   |   |--- class: 1.0
+|   |   |   |   |   |   |   |   |--- neu >  0.86
+|   |   |   |   |   |   |   |   |   |--- class: 0.0
+|   |   |   |   |   |   |   |--- sentence_length >  85.00
+|   |   |   |   |   |   |   |   |--- class: 1.0
+|   |   |   |   |   |   |--- compound >  0.25
+|   |   |   |   |   |   |   |--- class: 0.0
+|   |   |   |   |   |--- sentence_length >  128.50
+|   |   |   |   |   |   |--- class: 1.0
+|   |   |--- compound >  0.61
+|   |   |   |--- pos <= 0.27
+|   |   |   |   |--- punctuation_count <= 0.06
+|   |   |   |   |   |--- compound <= 0.62
+|   |   |   |   |   |   |--- class: 0.0
+|   |   |   |   |   |--- compound >  0.62
+|   |   |   |   |   |   |--- sentence_length <= 128.50
+|   |   |   |   |   |   |   |--- pos <= 0.18
+|   |   |   |   |   |   |   |   |--- class: 0.0
+|   |   |   |   |   |   |   |--- pos >  0.18
+|   |   |   |   |   |   |   |   |--- class: 1.0
+|   |   |   |   |   |   |--- sentence_length >  128.50
+|   |   |   |   |   |   |   |--- class: 0.0
+|   |   |   |   |--- punctuation_count >  0.06
+|   |   |   |   |   |--- class: 0.0
+|   |   |   |--- pos >  0.27
+|   |   |   |   |--- punctuation_count <= 0.11
+|   |   |   |   |   |--- sentence_length <= 130.50
+|   |   |   |   |   |   |--- compound <= 0.66
+|   |   |   |   |   |   |   |--- class: 0.0
+|   |   |   |   |   |   |--- compound >  0.66
+|   |   |   |   |   |   |   |--- sentence_length <= 31.50
+|   |   |   |   |   |   |   |   |--- class: 0.0
+|   |   |   |   |   |   |   |--- sentence_length >  31.50
+|   |   |   |   |   |   |   |   |--- sentence_length <= 37.50
+|   |   |   |   |   |   |   |   |   |--- sentence_length <= 35.50
+|   |   |   |   |   |   |   |   |   |   |--- compound <= 0.83
+|   |   |   |   |   |   |   |   |   |   |   |--- class: 0.0
+|   |   |   |   |   |   |   |   |   |   |--- compound >  0.83
+|   |   |   |   |   |   |   |   |   |   |   |--- class: 1.0
+|   |   |   |   |   |   |   |   |   |--- sentence_length >  35.50
+|   |   |   |   |   |   |   |   |   |   |--- class: 1.0
+|   |   |   |   |   |   |   |   |--- sentence_length >  37.50
+|   |   |   |   |   |   |   |   |   |--- compound <= 0.66
+|   |   |   |   |   |   |   |   |   |   |--- class: 1.0
+|   |   |   |   |   |   |   |   |   |--- compound >  0.66
+|   |   |   |   |   |   |   |   |   |   |--- sentence_length <= 79.00
+|   |   |   |   |   |   |   |   |   |   |   |--- class: 0.0
+|   |   |   |   |   |   |   |   |   |   |--- sentence_length >  79.00
+|   |   |   |   |   |   |   |   |   |   |   |--- truncated branch of depth 7
+|   |   |   |   |   |--- sentence_length >  130.50
+|   |   |   |   |   |   |--- class: 1.0
+|   |   |   |   |--- punctuation_count >  0.11
+|   |   |   |   |   |--- punctuation_count <= 0.14
+|   |   |   |   |   |   |--- class: 1.0
+|   |   |   |   |   |--- punctuation_count >  0.14
+|   |   |   |   |   |   |--- class: 0.0
 |--- neg >  0.08
 |   |--- contain_profanity <= 0.50
 |   |   |--- neg <= 0.48
-|   |   |   |--- class: 0.0
+|   |   |   |--- sentence_length <= 135.50
+|   |   |   |   |--- sentence_length <= 84.50
+|   |   |   |   |   |--- punctuation_count <= 0.02
+|   |   |   |   |   |   |--- neu <= 0.69
+|   |   |   |   |   |   |   |--- neu <= 0.66
+|   |   |   |   |   |   |   |   |--- neg <= 0.17
+|   |   |   |   |   |   |   |   |   |--- compound <= 0.84
+|   |   |   |   |   |   |   |   |   |   |--- class: 0.0
+|   |   |   |   |   |   |   |   |   |--- compound >  0.84
+|   |   |   |   |   |   |   |   |   |   |--- compound <= 0.85
+|   |   |   |   |   |   |   |   |   |   |   |--- class: 1.0
+|   |   |   |   |   |   |   |   |   |   |--- compound >  0.85
+|   |   |   |   |   |   |   |   |   |   |   |--- class: 0.0
+|   |   |   |   |   |   |   |   |--- neg >  0.17
+|   |   |   |   |   |   |   |   |   |--- neg <= 0.17
+|   |   |   |   |   |   |   |   |   |   |--- punctuation_count <= 0.02
+|   |   |   |   |   |   |   |   |   |   |   |--- class: 1.0
+|   |   |   |   |   |   |   |   |   |   |--- punctuation_count >  0.02
+|   |   |   |   |   |   |   |   |   |   |   |--- class: 0.0
+|   |   |   |   |   |   |   |   |   |--- neg >  0.17
+|   |   |   |   |   |   |   |   |   |   |--- neu <= 0.53
+|   |   |   |   |   |   |   |   |   |   |   |--- truncated branch of depth 7
+|   |   |   |   |   |   |   |   |   |   |--- neu >  0.53
+|   |   |   |   |   |   |   |   |   |   |   |--- truncated branch of depth 4
+|   |   |   |   |   |   |   |--- neu >  0.66
+|   |   |   |   |   |   |   |   |--- neg <= 0.31
+|   |   |   |   |   |   |   |   |   |--- neg <= 0.17
+|   |   |   |   |   |   |   |   |   |   |--- punctuation_count <= 0.01
+|   |   |   |   |   |   |   |   |   |   |   |--- truncated branch of depth 2
+|   |   |   |   |   |   |   |   |   |   |--- punctuation_count >  0.01
+|   |   |   |   |   |   |   |   |   |   |   |--- class: 0.0
+|   |   |   |   |   |   |   |   |   |--- neg >  0.17
+|   |   |   |   |   |   |   |   |   |   |--- class: 1.0
+|   |   |   |   |   |   |   |   |--- neg >  0.31
+|   |   |   |   |   |   |   |   |   |--- sentence_length <= 62.50
+|   |   |   |   |   |   |   |   |   |   |--- punctuation_count <= 0.02
+|   |   |   |   |   |   |   |   |   |   |   |--- class: 0.0
+|   |   |   |   |   |   |   |   |   |   |--- punctuation_count >  0.02
+|   |   |   |   |   |   |   |   |   |   |   |--- truncated branch of depth 2
+|   |   |   |   |   |   |   |   |   |--- sentence_length >  62.50
+|   |   |   |   |   |   |   |   |   |   |--- class: 1.0
+|   |   |   |   |   |   |--- neu >  0.69
+|   |   |   |   |   |   |   |--- sentence_length <= 83.50
+|   |   |   |   |   |   |   |   |--- neg <= 0.20
+|   |   |   |   |   |   |   |   |   |--- sentence_length <= 50.50
+|   |   |   |   |   |   |   |   |   |   |--- neu <= 0.82
+|   |   |   |   |   |   |   |   |   |   |   |--- class: 1.0
+|   |   |   |   |   |   |   |   |   |   |--- neu >  0.82
+|   |   |   |   |   |   |   |   |   |   |   |--- class: 0.0
+|   |   |   |   |   |   |   |   |   |--- sentence_length >  50.50
+|   |   |   |   |   |   |   |   |   |   |--- neu <= 0.83
+|   |   |   |   |   |   |   |   |   |   |   |--- class: 0.0
+|   |   |   |   |   |   |   |   |   |   |--- neu >  0.83
+|   |   |   |   |   |   |   |   |   |   |   |--- truncated branch of depth 4
+|   |   |   |   |   |   |   |   |--- neg >  0.20
+|   |   |   |   |   |   |   |   |   |--- compound <= -0.52
+|   |   |   |   |   |   |   |   |   |   |--- compound <= -0.58
+|   |   |   |   |   |   |   |   |   |   |   |--- class: 0.0
+|   |   |   |   |   |   |   |   |   |   |--- compound >  -0.58
+|   |   |   |   |   |   |   |   |   |   |   |--- truncated branch of depth 2
+|   |   |   |   |   |   |   |   |   |--- compound >  -0.52
+|   |   |   |   |   |   |   |   |   |   |--- class: 0.0
+|   |   |   |   |   |   |   |--- sentence_length >  83.50
+|   |   |   |   |   |   |   |   |--- neg <= 0.21
+|   |   |   |   |   |   |   |   |   |--- class: 1.0
+|   |   |   |   |   |   |   |   |--- neg >  0.21
+|   |   |   |   |   |   |   |   |   |--- class: 0.0
+|   |   |   |   |   |--- punctuation_count >  0.02
+|   |   |   |   |   |   |--- neu <= 0.19
+|   |   |   |   |   |   |   |--- pos <= 0.64
+|   |   |   |   |   |   |   |   |--- pos <= 0.51
+|   |   |   |   |   |   |   |   |   |--- pos <= 0.40
+|   |   |   |   |   |   |   |   |   |   |--- class: 1.0
+|   |   |   |   |   |   |   |   |   |--- pos >  0.40
+|   |   |   |   |   |   |   |   |   |   |--- class: 0.0
+|   |   |   |   |   |   |   |   |--- pos >  0.51
+|   |   |   |   |   |   |   |   |   |--- compound <= 0.12
+|   |   |   |   |   |   |   |   |   |   |--- class: 0.0
+|   |   |   |   |   |   |   |   |   |--- compound >  0.12
+|   |   |   |   |   |   |   |   |   |   |--- class: 1.0
+|   |   |   |   |   |   |   |--- pos >  0.64
+|   |   |   |   |   |   |   |   |--- class: 0.0
+|   |   |   |   |   |   |--- neu >  0.19
+|   |   |   |   |   |   |   |--- compound <= 0.23
+|   |   |   |   |   |   |   |   |--- compound <= 0.22
+|   |   |   |   |   |   |   |   |   |--- pos <= 0.08
+|   |   |   |   |   |   |   |   |   |   |--- compound <= -0.36
+|   |   |   |   |   |   |   |   |   |   |   |--- truncated branch of depth 13
+|   |   |   |   |   |   |   |   |   |   |--- compound >  -0.36
+|   |   |   |   |   |   |   |   |   |   |   |--- truncated branch of depth 3
+|   |   |   |   |   |   |   |   |   |--- pos >  0.08
+|   |   |   |   |   |   |   |   |   |   |--- compound <= -0.61
+|   |   |   |   |   |   |   |   |   |   |   |--- truncated branch of depth 6
+|   |   |   |   |   |   |   |   |   |   |--- compound >  -0.61
+|   |   |   |   |   |   |   |   |   |   |   |--- truncated branch of depth 11
+|   |   |   |   |   |   |   |   |--- compound >  0.22
+|   |   |   |   |   |   |   |   |   |--- class: 1.0
+|   |   |   |   |   |   |   |--- compound >  0.23
+|   |   |   |   |   |   |   |   |--- sentence_length <= 56.50
+|   |   |   |   |   |   |   |   |   |--- punctuation_count <= 0.09
+|   |   |   |   |   |   |   |   |   |   |--- class: 0.0
+|   |   |   |   |   |   |   |   |   |--- punctuation_count >  0.09
+|   |   |   |   |   |   |   |   |   |   |--- neu <= 0.32
+|   |   |   |   |   |   |   |   |   |   |   |--- truncated branch of depth 2
+|   |   |   |   |   |   |   |   |   |   |--- neu >  0.32
+|   |   |   |   |   |   |   |   |   |   |   |--- class: 0.0
+|   |   |   |   |   |   |   |   |--- sentence_length >  56.50
+|   |   |   |   |   |   |   |   |   |--- punctuation_count <= 0.06
+|   |   |   |   |   |   |   |   |   |   |--- neu <= 0.34
+|   |   |   |   |   |   |   |   |   |   |   |--- class: 1.0
+|   |   |   |   |   |   |   |   |   |   |--- neu >  0.34
+|   |   |   |   |   |   |   |   |   |   |   |--- truncated branch of depth 9
+|   |   |   |   |   |   |   |   |   |--- punctuation_count >  0.06
+|   |   |   |   |   |   |   |   |   |   |--- compound <= 0.70
+|   |   |   |   |   |   |   |   |   |   |   |--- class: 0.0
+|   |   |   |   |   |   |   |   |   |   |--- compound >  0.70
+|   |   |   |   |   |   |   |   |   |   |   |--- truncated branch of depth 4
+|   |   |   |   |--- sentence_length >  84.50
+|   |   |   |   |   |--- neu <= 0.91
+|   |   |   |   |   |   |--- neu <= 0.43
+|   |   |   |   |   |   |   |--- neu <= 0.39
+|   |   |   |   |   |   |   |   |--- punctuation_count <= 0.00
+|   |   |   |   |   |   |   |   |   |--- class: 1.0
+|   |   |   |   |   |   |   |   |--- punctuation_count >  0.00
+|   |   |   |   |   |   |   |   |   |--- class: 0.0
+|   |   |   |   |   |   |   |--- neu >  0.39
+|   |   |   |   |   |   |   |   |--- pos <= 0.13
+|   |   |   |   |   |   |   |   |   |--- class: 0.0
+|   |   |   |   |   |   |   |   |--- pos >  0.13
+|   |   |   |   |   |   |   |   |   |--- neu <= 0.42
+|   |   |   |   |   |   |   |   |   |   |--- neu <= 0.41
+|   |   |   |   |   |   |   |   |   |   |   |--- truncated branch of depth 2
+|   |   |   |   |   |   |   |   |   |   |--- neu >  0.41
+|   |   |   |   |   |   |   |   |   |   |   |--- class: 0.0
+|   |   |   |   |   |   |   |   |   |--- neu >  0.42
+|   |   |   |   |   |   |   |   |   |   |--- class: 1.0
+|   |   |   |   |   |   |--- neu >  0.43
+|   |   |   |   |   |   |   |--- neu <= 0.53
+|   |   |   |   |   |   |   |   |--- punctuation_count <= 0.04
+|   |   |   |   |   |   |   |   |   |--- punctuation_count <= 0.03
+|   |   |   |   |   |   |   |   |   |   |--- punctuation_count <= 0.03
+|   |   |   |   |   |   |   |   |   |   |   |--- truncated branch of depth 3
+|   |   |   |   |   |   |   |   |   |   |--- punctuation_count >  0.03
+|   |   |   |   |   |   |   |   |   |   |   |--- class: 1.0
+|   |   |   |   |   |   |   |   |   |--- punctuation_count >  0.03
+|   |   |   |   |   |   |   |   |   |   |--- class: 0.0
+|   |   |   |   |   |   |   |   |--- punctuation_count >  0.04
+|   |   |   |   |   |   |   |   |   |--- compound <= -0.68
+|   |   |   |   |   |   |   |   |   |   |--- class: 0.0
+|   |   |   |   |   |   |   |   |   |--- compound >  -0.68
+|   |   |   |   |   |   |   |   |   |   |--- neg <= 0.24
+|   |   |   |   |   |   |   |   |   |   |   |--- truncated branch of depth 3
+|   |   |   |   |   |   |   |   |   |   |--- neg >  0.24
+|   |   |   |   |   |   |   |   |   |   |   |--- truncated branch of depth 3
+|   |   |   |   |   |   |   |--- neu >  0.53
+|   |   |   |   |   |   |   |   |--- neu <= 0.55
+|   |   |   |   |   |   |   |   |   |--- neg <= 0.14
+|   |   |   |   |   |   |   |   |   |   |--- class: 0.0
+|   |   |   |   |   |   |   |   |   |--- neg >  0.14
+|   |   |   |   |   |   |   |   |   |   |--- neg <= 0.27
+|   |   |   |   |   |   |   |   |   |   |   |--- truncated branch of depth 2
+|   |   |   |   |   |   |   |   |   |   |--- neg >  0.27
+|   |   |   |   |   |   |   |   |   |   |   |--- class: 1.0
+|   |   |   |   |   |   |   |   |--- neu >  0.55
+|   |   |   |   |   |   |   |   |   |--- neu <= 0.59
+|   |   |   |   |   |   |   |   |   |   |--- punctuation_count <= 0.03
+|   |   |   |   |   |   |   |   |   |   |   |--- truncated branch of depth 6
+|   |   |   |   |   |   |   |   |   |   |--- punctuation_count >  0.03
+|   |   |   |   |   |   |   |   |   |   |   |--- truncated branch of depth 6
+|   |   |   |   |   |   |   |   |   |--- neu >  0.59
+|   |   |   |   |   |   |   |   |   |   |--- compound <= -0.90
+|   |   |   |   |   |   |   |   |   |   |   |--- class: 1.0
+|   |   |   |   |   |   |   |   |   |   |--- compound >  -0.90
+|   |   |   |   |   |   |   |   |   |   |   |--- truncated branch of depth 30
+|   |   |   |   |   |--- neu >  0.91
+|   |   |   |   |   |   |--- sentence_length <= 103.50
+|   |   |   |   |   |   |   |--- class: 0.0
+|   |   |   |   |   |   |--- sentence_length >  103.50
+|   |   |   |   |   |   |   |--- class: 1.0
+|   |   |   |--- sentence_length >  135.50
+|   |   |   |   |--- class: 0.0
 |   |   |--- neg >  0.48
-|   |   |   |--- class: 1.0
+|   |   |   |--- sentence_length <= 4.50
+|   |   |   |   |--- class: 0.0
+|   |   |   |--- sentence_length >  4.50
+|   |   |   |   |--- sentence_length <= 24.50
+|   |   |   |   |   |--- compound <= -0.36
+|   |   |   |   |   |   |--- neg <= 0.49
+|   |   |   |   |   |   |   |--- class: 1.0
+|   |   |   |   |   |   |--- neg >  0.49
+|   |   |   |   |   |   |   |--- compound <= -0.36
+|   |   |   |   |   |   |   |   |--- neg <= 0.72
+|   |   |   |   |   |   |   |   |   |--- sentence_length <= 20.50
+|   |   |   |   |   |   |   |   |   |   |--- class: 1.0
+|   |   |   |   |   |   |   |   |   |--- sentence_length >  20.50
+|   |   |   |   |   |   |   |   |   |   |--- compound <= -0.63
+|   |   |   |   |   |   |   |   |   |   |   |--- class: 1.0
+|   |   |   |   |   |   |   |   |   |   |--- compound >  -0.63
+|   |   |   |   |   |   |   |   |   |   |   |--- truncated branch of depth 4
+|   |   |   |   |   |   |   |   |--- neg >  0.72
+|   |   |   |   |   |   |   |   |   |--- neu <= 0.26
+|   |   |   |   |   |   |   |   |   |   |--- sentence_length <= 10.50
+|   |   |   |   |   |   |   |   |   |   |   |--- class: 0.0
+|   |   |   |   |   |   |   |   |   |   |--- sentence_length >  10.50
+|   |   |   |   |   |   |   |   |   |   |   |--- truncated branch of depth 2
+|   |   |   |   |   |   |   |   |   |--- neu >  0.26
+|   |   |   |   |   |   |   |   |   |   |--- class: 0.0
+|   |   |   |   |   |   |   |--- compound >  -0.36
+|   |   |   |   |   |   |   |   |--- class: 1.0
+|   |   |   |   |   |--- compound >  -0.36
+|   |   |   |   |   |   |--- neu <= 0.19
+|   |   |   |   |   |   |   |--- class: 1.0
+|   |   |   |   |   |   |--- neu >  0.19
+|   |   |   |   |   |   |   |--- class: 0.0
+|   |   |   |   |--- sentence_length >  24.50
+|   |   |   |   |   |--- punctuation_count <= 0.07
+|   |   |   |   |   |   |--- neu <= 0.51
+|   |   |   |   |   |   |   |--- punctuation_count <= 0.07
+|   |   |   |   |   |   |   |   |--- class: 0.0
+|   |   |   |   |   |   |   |--- punctuation_count >  0.07
+|   |   |   |   |   |   |   |   |--- class: 0.0
+|   |   |   |   |   |   |--- neu >  0.51
+|   |   |   |   |   |   |   |--- class: 0.0
+|   |   |   |   |   |--- punctuation_count >  0.07
+|   |   |   |   |   |   |--- compound <= -0.84
+|   |   |   |   |   |   |   |--- class: 0.0
+|   |   |   |   |   |   |--- compound >  -0.84
+|   |   |   |   |   |   |   |--- sentence_length <= 27.50
+|   |   |   |   |   |   |   |   |--- class: 0.0
+|   |   |   |   |   |   |   |--- sentence_length >  27.50
+|   |   |   |   |   |   |   |   |--- sentence_length <= 43.00
+|   |   |   |   |   |   |   |   |   |--- class: 1.0
+|   |   |   |   |   |   |   |   |--- sentence_length >  43.00
+|   |   |   |   |   |   |   |   |   |--- neu <= 0.37
+|   |   |   |   |   |   |   |   |   |   |--- class: 1.0
+|   |   |   |   |   |   |   |   |   |--- neu >  0.37
+|   |   |   |   |   |   |   |   |   |   |--- class: 0.0
 |   |--- contain_profanity >  0.50
 |   |   |--- neg <= 0.27
-|   |   |   |--- class: 0.0
+|   |   |   |--- compound <= -0.53
+|   |   |   |   |--- punctuation_count <= 0.10
+|   |   |   |   |   |--- punctuation_count <= 0.02
+|   |   |   |   |   |   |--- compound <= -0.55
+|   |   |   |   |   |   |   |--- compound <= -0.83
+|   |   |   |   |   |   |   |   |--- class: 0.0
+|   |   |   |   |   |   |   |--- compound >  -0.83
+|   |   |   |   |   |   |   |   |--- neg <= 0.18
+|   |   |   |   |   |   |   |   |   |--- neu <= 0.85
+|   |   |   |   |   |   |   |   |   |   |--- class: 0.0
+|   |   |   |   |   |   |   |   |   |--- neu >  0.85
+|   |   |   |   |   |   |   |   |   |   |--- class: 1.0
+|   |   |   |   |   |   |   |   |--- neg >  0.18
+|   |   |   |   |   |   |   |   |   |--- class: 1.0
+|   |   |   |   |   |   |--- compound >  -0.55
+|   |   |   |   |   |   |   |--- num_profanity <= 0.50
+|   |   |   |   |   |   |   |   |--- class: 1.0
+|   |   |   |   |   |   |   |--- num_profanity >  0.50
+|   |   |   |   |   |   |   |   |--- punctuation_count <= 0.02
+|   |   |   |   |   |   |   |   |   |--- neu <= 0.79
+|   |   |   |   |   |   |   |   |   |   |--- class: 0.0
+|   |   |   |   |   |   |   |   |   |--- neu >  0.79
+|   |   |   |   |   |   |   |   |   |   |--- class: 1.0
+|   |   |   |   |   |   |   |   |--- punctuation_count >  0.02
+|   |   |   |   |   |   |   |   |   |--- class: 0.0
+|   |   |   |   |   |--- punctuation_count >  0.02
+|   |   |   |   |   |   |--- sentence_length <= 66.50
+|   |   |   |   |   |   |   |--- num_profanity <= 0.50
+|   |   |   |   |   |   |   |   |--- compound <= -0.56
+|   |   |   |   |   |   |   |   |   |--- class: 0.0
+|   |   |   |   |   |   |   |   |--- compound >  -0.56
+|   |   |   |   |   |   |   |   |   |--- class: 1.0
+|   |   |   |   |   |   |   |--- num_profanity >  0.50
+|   |   |   |   |   |   |   |   |--- sentence_length <= 52.50
+|   |   |   |   |   |   |   |   |   |--- class: 0.0
+|   |   |   |   |   |   |   |   |--- sentence_length >  52.50
+|   |   |   |   |   |   |   |   |   |--- class: 1.0
+|   |   |   |   |   |   |--- sentence_length >  66.50
+|   |   |   |   |   |   |   |--- sentence_length <= 72.50
+|   |   |   |   |   |   |   |   |--- class: 0.0
+|   |   |   |   |   |   |   |--- sentence_length >  72.50
+|   |   |   |   |   |   |   |   |--- punctuation_count <= 0.02
+|   |   |   |   |   |   |   |   |   |--- class: 0.0
+|   |   |   |   |   |   |   |   |--- punctuation_count >  0.02
+|   |   |   |   |   |   |   |   |   |--- punctuation_count <= 0.05
+|   |   |   |   |   |   |   |   |   |   |--- neu <= 0.82
+|   |   |   |   |   |   |   |   |   |   |   |--- truncated branch of depth 9
+|   |   |   |   |   |   |   |   |   |   |--- neu >  0.82
+|   |   |   |   |   |   |   |   |   |   |   |--- truncated branch of depth 5
+|   |   |   |   |   |   |   |   |   |--- punctuation_count >  0.05
+|   |   |   |   |   |   |   |   |   |   |--- punctuation_count <= 0.06
+|   |   |   |   |   |   |   |   |   |   |   |--- class: 0.0
+|   |   |   |   |   |   |   |   |   |   |--- punctuation_count >  0.06
+|   |   |   |   |   |   |   |   |   |   |   |--- truncated branch of depth 6
+|   |   |   |   |--- punctuation_count >  0.10
+|   |   |   |   |   |--- class: 0.0
+|   |   |   |--- compound >  -0.53
+|   |   |   |   |--- num_profanity <= 2.50
+|   |   |   |   |   |--- compound <= 0.92
+|   |   |   |   |   |   |--- compound <= -0.51
+|   |   |   |   |   |   |   |--- class: 0.0
+|   |   |   |   |   |   |--- compound >  -0.51
+|   |   |   |   |   |   |   |--- compound <= 0.49
+|   |   |   |   |   |   |   |   |--- pos <= 0.09
+|   |   |   |   |   |   |   |   |   |--- neu <= 0.85
+|   |   |   |   |   |   |   |   |   |   |--- sentence_length <= 69.50
+|   |   |   |   |   |   |   |   |   |   |   |--- truncated branch of depth 10
+|   |   |   |   |   |   |   |   |   |   |--- sentence_length >  69.50
+|   |   |   |   |   |   |   |   |   |   |   |--- truncated branch of depth 11
+|   |   |   |   |   |   |   |   |   |--- neu >  0.85
+|   |   |   |   |   |   |   |   |   |   |--- neu <= 0.87
+|   |   |   |   |   |   |   |   |   |   |   |--- truncated branch of depth 3
+|   |   |   |   |   |   |   |   |   |   |--- neu >  0.87
+|   |   |   |   |   |   |   |   |   |   |   |--- truncated branch of depth 6
+|   |   |   |   |   |   |   |   |--- pos >  0.09
+|   |   |   |   |   |   |   |   |   |--- pos <= 0.12
+|   |   |   |   |   |   |   |   |   |   |--- pos <= 0.11
+|   |   |   |   |   |   |   |   |   |   |   |--- truncated branch of depth 10
+|   |   |   |   |   |   |   |   |   |   |--- pos >  0.11
+|   |   |   |   |   |   |   |   |   |   |   |--- truncated branch of depth 2
+|   |   |   |   |   |   |   |   |   |--- pos >  0.12
+|   |   |   |   |   |   |   |   |   |   |--- punctuation_count <= 0.06
+|   |   |   |   |   |   |   |   |   |   |   |--- truncated branch of depth 19
+|   |   |   |   |   |   |   |   |   |   |--- punctuation_count >  0.06
+|   |   |   |   |   |   |   |   |   |   |   |--- truncated branch of depth 9
+|   |   |   |   |   |   |   |--- compound >  0.49
+|   |   |   |   |   |   |   |   |--- compound <= 0.59
+|   |   |   |   |   |   |   |   |   |--- sentence_length <= 123.50
+|   |   |   |   |   |   |   |   |   |   |--- compound <= 0.56
+|   |   |   |   |   |   |   |   |   |   |   |--- truncated branch of depth 7
+|   |   |   |   |   |   |   |   |   |   |--- compound >  0.56
+|   |   |   |   |   |   |   |   |   |   |   |--- class: 0.0
+|   |   |   |   |   |   |   |   |   |--- sentence_length >  123.50
+|   |   |   |   |   |   |   |   |   |   |--- punctuation_count <= 0.04
+|   |   |   |   |   |   |   |   |   |   |   |--- truncated branch of depth 3
+|   |   |   |   |   |   |   |   |   |   |--- punctuation_count >  0.04
+|   |   |   |   |   |   |   |   |   |   |   |--- class: 0.0
+|   |   |   |   |   |   |   |   |--- compound >  0.59
+|   |   |   |   |   |   |   |   |   |--- neu <= 0.61
+|   |   |   |   |   |   |   |   |   |   |--- neg <= 0.12
+|   |   |   |   |   |   |   |   |   |   |   |--- truncated branch of depth 6
+|   |   |   |   |   |   |   |   |   |   |--- neg >  0.12
+|   |   |   |   |   |   |   |   |   |   |   |--- truncated branch of depth 12
+|   |   |   |   |   |   |   |   |   |--- neu >  0.61
+|   |   |   |   |   |   |   |   |   |   |--- neu <= 0.62
+|   |   |   |   |   |   |   |   |   |   |   |--- class: 1.0
+|   |   |   |   |   |   |   |   |   |   |--- neu >  0.62
+|   |   |   |   |   |   |   |   |   |   |   |--- truncated branch of depth 7
+|   |   |   |   |   |--- compound >  0.92
+|   |   |   |   |   |   |--- compound <= 0.93
+|   |   |   |   |   |   |   |--- neg <= 0.15
+|   |   |   |   |   |   |   |   |--- class: 1.0
+|   |   |   |   |   |   |   |--- neg >  0.15
+|   |   |   |   |   |   |   |   |--- class: 0.0
+|   |   |   |   |   |   |--- compound >  0.93
+|   |   |   |   |   |   |   |--- neg <= 0.11
+|   |   |   |   |   |   |   |   |--- class: 0.0
+|   |   |   |   |   |   |   |--- neg >  0.11
+|   |   |   |   |   |   |   |   |--- class: 1.0
+|   |   |   |   |--- num_profanity >  2.50
+|   |   |   |   |   |--- neu <= 0.50
+|   |   |   |   |   |   |--- class: 0.0
+|   |   |   |   |   |--- neu >  0.50
+|   |   |   |   |   |   |--- class: 1.0
 |   |   |--- neg >  0.27
-|   |   |   |--- class: 1.0
+|   |   |   |--- neg <= 0.63
+|   |   |   |   |--- compound <= -0.47
+|   |   |   |   |   |--- neg <= 0.50
+|   |   |   |   |   |   |--- compound <= -0.77
+|   |   |   |   |   |   |   |--- punctuation_count <= 0.08
+|   |   |   |   |   |   |   |   |--- neg <= 0.44
+|   |   |   |   |   |   |   |   |   |--- sentence_length <= 122.50
+|   |   |   |   |   |   |   |   |   |   |--- punctuation_count <= 0.05
+|   |   |   |   |   |   |   |   |   |   |   |--- truncated branch of depth 8
+|   |   |   |   |   |   |   |   |   |   |--- punctuation_count >  0.05
+|   |   |   |   |   |   |   |   |   |   |   |--- class: 1.0
+|   |   |   |   |   |   |   |   |   |--- sentence_length >  122.50
+|   |   |   |   |   |   |   |   |   |   |--- compound <= -0.90
+|   |   |   |   |   |   |   |   |   |   |   |--- truncated branch of depth 2
+|   |   |   |   |   |   |   |   |   |   |--- compound >  -0.90
+|   |   |   |   |   |   |   |   |   |   |   |--- truncated branch of depth 4
+|   |   |   |   |   |   |   |   |--- neg >  0.44
+|   |   |   |   |   |   |   |   |   |--- sentence_length <= 98.50
+|   |   |   |   |   |   |   |   |   |   |--- neg <= 0.44
+|   |   |   |   |   |   |   |   |   |   |   |--- class: 0.0
+|   |   |   |   |   |   |   |   |   |   |--- neg >  0.44
+|   |   |   |   |   |   |   |   |   |   |   |--- class: 1.0
+|   |   |   |   |   |   |   |   |   |--- sentence_length >  98.50
+|   |   |   |   |   |   |   |   |   |   |--- num_profanity <= 2.50
+|   |   |   |   |   |   |   |   |   |   |   |--- class: 0.0
+|   |   |   |   |   |   |   |   |   |   |--- num_profanity >  2.50
+|   |   |   |   |   |   |   |   |   |   |   |--- class: 1.0
+|   |   |   |   |   |   |   |--- punctuation_count >  0.08
+|   |   |   |   |   |   |   |   |--- pos <= 0.07
+|   |   |   |   |   |   |   |   |   |--- neu <= 0.63
+|   |   |   |   |   |   |   |   |   |   |--- class: 1.0
+|   |   |   |   |   |   |   |   |   |--- neu >  0.63
+|   |   |   |   |   |   |   |   |   |   |--- neu <= 0.67
+|   |   |   |   |   |   |   |   |   |   |   |--- class: 0.0
+|   |   |   |   |   |   |   |   |   |   |--- neu >  0.67
+|   |   |   |   |   |   |   |   |   |   |   |--- class: 1.0
+|   |   |   |   |   |   |   |   |--- pos >  0.07
+|   |   |   |   |   |   |   |   |   |--- class: 0.0
+|   |   |   |   |   |   |--- compound >  -0.77
+|   |   |   |   |   |   |   |--- compound <= -0.75
+|   |   |   |   |   |   |   |   |--- neg <= 0.38
+|   |   |   |   |   |   |   |   |   |--- sentence_length <= 122.50
+|   |   |   |   |   |   |   |   |   |   |--- class: 0.0
+|   |   |   |   |   |   |   |   |   |--- sentence_length >  122.50
+|   |   |   |   |   |   |   |   |   |   |--- class: 1.0
+|   |   |   |   |   |   |   |   |--- neg >  0.38
+|   |   |   |   |   |   |   |   |   |--- compound <= -0.76
+|   |   |   |   |   |   |   |   |   |   |--- punctuation_count <= 0.01
+|   |   |   |   |   |   |   |   |   |   |   |--- class: 0.0
+|   |   |   |   |   |   |   |   |   |   |--- punctuation_count >  0.01
+|   |   |   |   |   |   |   |   |   |   |   |--- class: 1.0
+|   |   |   |   |   |   |   |   |   |--- compound >  -0.76
+|   |   |   |   |   |   |   |   |   |   |--- class: 0.0
+|   |   |   |   |   |   |   |--- compound >  -0.75
+|   |   |   |   |   |   |   |   |--- num_profanity <= 1.50
+|   |   |   |   |   |   |   |   |   |--- sentence_length <= 59.50
+|   |   |   |   |   |   |   |   |   |   |--- neg <= 0.28
+|   |   |   |   |   |   |   |   |   |   |   |--- class: 0.0
+|   |   |   |   |   |   |   |   |   |   |--- neg >  0.28
+|   |   |   |   |   |   |   |   |   |   |   |--- truncated branch of depth 15
+|   |   |   |   |   |   |   |   |   |--- sentence_length >  59.50
+|   |   |   |   |   |   |   |   |   |   |--- punctuation_count <= 0.01
+|   |   |   |   |   |   |   |   |   |   |   |--- class: 1.0
+|   |   |   |   |   |   |   |   |   |   |--- punctuation_count >  0.01
+|   |   |   |   |   |   |   |   |   |   |   |--- truncated branch of depth 11
+|   |   |   |   |   |   |   |   |--- num_profanity >  1.50
+|   |   |   |   |   |   |   |   |   |--- neu <= 0.40
+|   |   |   |   |   |   |   |   |   |   |--- class: 0.0
+|   |   |   |   |   |   |   |   |   |--- neu >  0.40
+|   |   |   |   |   |   |   |   |   |   |--- neg <= 0.30
+|   |   |   |   |   |   |   |   |   |   |   |--- class: 1.0
+|   |   |   |   |   |   |   |   |   |   |--- neg >  0.30
+|   |   |   |   |   |   |   |   |   |   |   |--- truncated branch of depth 5
+|   |   |   |   |   |--- neg >  0.50
+|   |   |   |   |   |   |--- neg <= 0.51
+|   |   |   |   |   |   |   |--- class: 1.0
+|   |   |   |   |   |   |--- neg >  0.51
+|   |   |   |   |   |   |   |--- neu <= 0.49
+|   |   |   |   |   |   |   |   |--- neu <= 0.28
+|   |   |   |   |   |   |   |   |   |--- sentence_length <= 31.00
+|   |   |   |   |   |   |   |   |   |   |--- neu <= 0.23
+|   |   |   |   |   |   |   |   |   |   |   |--- class: 1.0
+|   |   |   |   |   |   |   |   |   |   |--- neu >  0.23
+|   |   |   |   |   |   |   |   |   |   |   |--- class: 0.0
+|   |   |   |   |   |   |   |   |   |--- sentence_length >  31.00
+|   |   |   |   |   |   |   |   |   |   |--- class: 0.0
+|   |   |   |   |   |   |   |   |--- neu >  0.28
+|   |   |   |   |   |   |   |   |   |--- neg <= 0.63
+|   |   |   |   |   |   |   |   |   |   |--- class: 1.0
+|   |   |   |   |   |   |   |   |   |--- neg >  0.63
+|   |   |   |   |   |   |   |   |   |   |--- class: 0.0
+|   |   |   |   |   |   |   |--- neu >  0.49
+|   |   |   |   |   |   |   |   |--- class: 0.0
+|   |   |   |   |--- compound >  -0.47
+|   |   |   |   |   |--- pos <= 0.15
+|   |   |   |   |   |   |--- compound <= -0.46
+|   |   |   |   |   |   |   |--- class: 0.0
+|   |   |   |   |   |   |--- compound >  -0.46
+|   |   |   |   |   |   |   |--- sentence_length <= 14.50
+|   |   |   |   |   |   |   |   |--- punctuation_count <= 0.04
+|   |   |   |   |   |   |   |   |   |--- class: 0.0
+|   |   |   |   |   |   |   |   |--- punctuation_count >  0.04
+|   |   |   |   |   |   |   |   |   |--- class: 1.0
+|   |   |   |   |   |   |   |--- sentence_length >  14.50
+|   |   |   |   |   |   |   |   |--- sentence_length <= 25.50
+|   |   |   |   |   |   |   |   |   |--- num_profanity <= 0.50
+|   |   |   |   |   |   |   |   |   |   |--- class: 0.0
+|   |   |   |   |   |   |   |   |   |--- num_profanity >  0.50
+|   |   |   |   |   |   |   |   |   |   |--- sentence_length <= 22.50
+|   |   |   |   |   |   |   |   |   |   |   |--- class: 0.0
+|   |   |   |   |   |   |   |   |   |   |--- sentence_length >  22.50
+|   |   |   |   |   |   |   |   |   |   |   |--- class: 0.0
+|   |   |   |   |   |   |   |   |--- sentence_length >  25.50
+|   |   |   |   |   |   |   |   |   |--- neg <= 0.40
+|   |   |   |   |   |   |   |   |   |   |--- compound <= -0.36
+|   |   |   |   |   |   |   |   |   |   |   |--- truncated branch of depth 5
+|   |   |   |   |   |   |   |   |   |   |--- compound >  -0.36
+|   |   |   |   |   |   |   |   |   |   |   |--- class: 1.0
+|   |   |   |   |   |   |   |   |   |--- neg >  0.40
+|   |   |   |   |   |   |   |   |   |   |--- punctuation_count <= 0.11
+|   |   |   |   |   |   |   |   |   |   |   |--- class: 1.0
+|   |   |   |   |   |   |   |   |   |   |--- punctuation_count >  0.11
+|   |   |   |   |   |   |   |   |   |   |   |--- truncated branch of depth 2
+|   |   |   |   |   |--- pos >  0.15
+|   |   |   |   |   |   |--- punctuation_count <= 0.23
+|   |   |   |   |   |   |   |--- compound <= 0.39
+|   |   |   |   |   |   |   |   |--- pos <= 0.16
+|   |   |   |   |   |   |   |   |   |--- class: 1.0
+|   |   |   |   |   |   |   |   |--- pos >  0.16
+|   |   |   |   |   |   |   |   |   |--- punctuation_count <= 0.17
+|   |   |   |   |   |   |   |   |   |   |--- pos <= 0.17
+|   |   |   |   |   |   |   |   |   |   |   |--- truncated branch of depth 2
+|   |   |   |   |   |   |   |   |   |   |--- pos >  0.17
+|   |   |   |   |   |   |   |   |   |   |   |--- truncated branch of depth 14
+|   |   |   |   |   |   |   |   |   |--- punctuation_count >  0.17
+|   |   |   |   |   |   |   |   |   |   |--- class: 1.0
+|   |   |   |   |   |   |   |--- compound >  0.39
+|   |   |   |   |   |   |   |   |--- sentence_length <= 120.00
+|   |   |   |   |   |   |   |   |   |--- pos <= 0.70
+|   |   |   |   |   |   |   |   |   |   |--- class: 0.0
+|   |   |   |   |   |   |   |   |   |--- pos >  0.70
+|   |   |   |   |   |   |   |   |   |   |--- class: 1.0
+|   |   |   |   |   |   |   |   |--- sentence_length >  120.00
+|   |   |   |   |   |   |   |   |   |--- class: 1.0
+|   |   |   |   |   |   |--- punctuation_count >  0.23
+|   |   |   |   |   |   |   |--- class: 0.0
+|   |   |   |--- neg >  0.63
+|   |   |   |   |--- neg <= 0.76
+|   |   |   |   |   |--- neg <= 0.71
+|   |   |   |   |   |   |--- compound <= -0.43
+|   |   |   |   |   |   |   |--- class: 1.0
+|   |   |   |   |   |   |--- compound >  -0.43
+|   |   |   |   |   |   |   |--- class: 0.0
+|   |   |   |   |   |--- neg >  0.71
+|   |   |   |   |   |   |--- neu <= 0.28
+|   |   |   |   |   |   |   |--- compound <= -0.83
+|   |   |   |   |   |   |   |   |--- class: 1.0
+|   |   |   |   |   |   |   |--- compound >  -0.83
+|   |   |   |   |   |   |   |   |--- compound <= -0.73
+|   |   |   |   |   |   |   |   |   |--- class: 0.0
+|   |   |   |   |   |   |   |   |--- compound >  -0.73
+|   |   |   |   |   |   |   |   |   |--- neu <= 0.26
+|   |   |   |   |   |   |   |   |   |   |--- neg <= 0.75
+|   |   |   |   |   |   |   |   |   |   |   |--- truncated branch of depth 3
+|   |   |   |   |   |   |   |   |   |   |--- neg >  0.75
+|   |   |   |   |   |   |   |   |   |   |   |--- class: 1.0
+|   |   |   |   |   |   |   |   |   |--- neu >  0.26
+|   |   |   |   |   |   |   |   |   |   |--- punctuation_count <= 0.11
+|   |   |   |   |   |   |   |   |   |   |   |--- truncated branch of depth 2
+|   |   |   |   |   |   |   |   |   |   |--- punctuation_count >  0.11
+|   |   |   |   |   |   |   |   |   |   |   |--- class: 1.0
+|   |   |   |   |   |   |--- neu >  0.28
+|   |   |   |   |   |   |   |--- class: 0.0
+|   |   |   |   |--- neg >  0.76
+|   |   |   |   |   |--- punctuation_count <= 0.32
+|   |   |   |   |   |   |--- class: 1.0
+|   |   |   |   |   |--- punctuation_count >  0.32
+|   |   |   |   |   |   |--- punctuation_count <= 0.49
+|   |   |   |   |   |   |   |--- class: 0.0
+|   |   |   |   |   |   |--- punctuation_count >  0.49
+|   |   |   |   |   |   |   |--- class: 1.0

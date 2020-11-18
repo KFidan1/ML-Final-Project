@@ -13,7 +13,7 @@ from sklearn.naive_bayes import GaussianNB
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.svm import SVC
 from sklearn.tree import DecisionTreeClassifier
-from sklearn.metrics import accuracy_score, confusion_matrix, classification_report
+from sklearn.metrics import accuracy_score, confusion_matrix, classification_report, f1_score, recall_score
 
 import matplotlib.pyplot as plt
 import seaborn as sns
@@ -26,6 +26,11 @@ try:
   nltk.data.find('tokenizers/punkt')
 except LookupError:
   nltk.download('punkt')
+try:
+  nltk.data.find('corpora/stopwords')
+except LookupError:
+  nltk.download('stopwords')
+stop_words = set(stopwords.words('english'))
 
 class Classifier:
   def __init__(self, name, classifier, output):
@@ -39,14 +44,22 @@ class NLPTester:
     self.num_vectors = num_vectors
     self.single_model = single_model
     self.ml_models = []
-    self.tup = []
     self.accuracies = []
+    self.f1_scores = []
+    self.recall_scores = []
 
   def getModels(self):
-    return [str(model[0].output)[(str(model[0].output)).find("'"):(str(model[0].output)).rfind("'")+1] for model in self.ml_models]
+    #return [str(model[0].output)[(str(model[0].output)).find("'"):(str(model[0].output)).rfind("'")+1] for model in self.ml_models]
+    return [str(model[0].output[1:]) for model in self.ml_models]
 
   def getAccuracies(self):
     return self.accuracies
+  
+  def getf1Scores(self):
+    return self.f1_scores
+
+  def getRecallScores(self):
+    return self.recall_scores
 
   #TODO, update to support parameters
   def generate_models(self):
@@ -69,7 +82,6 @@ class NLPTester:
     svcdata = data[data["classifier"] == 'SVC']
     logdata = data[data["classifier"] == 'LogisticRegression']
 
-    #I just need to duplicate this for other classifiers, which is easy
     for svc in svcdata.itertuples():
       try:
         loaded = joblib.load(f"./models/{svc[1]} {svc[2]} {svc[3]} {svc[4]} {svc[5]}.model")
@@ -78,7 +90,7 @@ class NLPTester:
         if(svc[3] == "poly"):
           svc_class = SVC(kernel=svc[3], C=svc[4], degree=svc[5])
         elif(svc[3] == "rbf"):
-          svc_class = SVC(kernel=svc[3], C=svc[4], gamma=svc[5])
+          svc_class = SVC(kernel=svc[3], C=svc[4], gamma=float(svc[5]))
         elif(svc[3] == "linear"):
           svc_class = SVC(kernel=svc[3], C=svc[4])
         models.append((Classifier("SVC", svc_class, svc), False))
@@ -113,15 +125,12 @@ class NLPTester:
   def test_models(self):
     print("Testing")
 
-    svc_obj = self.generate_models()
+    models = self.generate_models()
 
-    #This is a terrible way to do this, I want something that works though right now.
-    #like this is finna about to take so much memory
-    #Also, I think there might be a bug where the first thing gets ran a lot
-    for model in svc_obj:
-      svc = model[0].output
+    for model in models:
+      class_array = model[0].output
       try:
-        d2v = Doc2Vec.load(f"./models/d2v_{svc[1]}.model")
+        d2v = Doc2Vec.load(f"./models/d2v_{class_array[1]}.model")
       except:
         d2v = None
 
@@ -129,11 +138,11 @@ class NLPTester:
 
       print(model[0].output)
       if(model[1] == False):
-        nlp.train(x_train, y_train, svc[1])
+        nlp.train(x_train, y_train, class_array[1])
         if(model[0].name == "SVC"):
-          joblib.dump(nlp.ml_model, f"./models/{svc[1]} {svc[2]} {svc[3]} {svc[4]} {svc[5]}.model")
+          joblib.dump(nlp.ml_model, f"./models/{class_array[1]} {class_array[2]} {class_array[3]} {class_array[4]} {class_array[5]}.model")
         else:
-          joblib.dump(nlp.ml_model, f"./models/{svc[1]} {svc[2]} {svc[3]}.model")
+          joblib.dump(nlp.ml_model, f"./models/{class_array[1]} {class_array[2]} {class_array[3]}.model")
       else:
         print("Loading existing model")
 
@@ -143,12 +152,13 @@ class NLPTester:
       # for i in range(len(y_pred)-1):
       #   print(y_pred[i], y_test[i], x_test[i])
 
-
       print("accuracy: ", accuracy_score(y_test, y_pred) * 100)
       print(confusion_matrix(y_test, y_pred))
       print(classification_report(y_test, y_pred))
       self.accuracies.append(accuracy_score(y_test, y_pred) * 100)
-      makeGraphsPerRun(y_test, y_pred, str(model[0].output))
+      self.f1_scores.append(f1_score(y_test, y_pred) * 100)
+      self.recall_scores.append(recall_score(y_test, y_pred) * 100)
+      makeGraphsPerRun(y_test, y_pred, str(model[0].output[1:]))
 
 
 class NLP:
@@ -156,9 +166,14 @@ class NLP:
     self.d2v_model = d2v_model # this is the doc2vec model to construct the word binding arrays
     self.ml_model = ml_model   # this is the ml model that is trained on the doc2vec arrays
 
+  # make all lowercase, string to list of words, remove stop words, then back to string
   def preprocess(self, tweet):
-    # todo take out stop words, dont change anything at all, etc
-    return tweet.lower()
+    # tweet.lower()
+    # tokenized_tweet = word_tokenize(tweet)
+    # filtered = [word for word in tokenized_tweet if not word in stop_words]
+    # filtered_str = (" ").join(filtered)
+    # return filtered_str
+    return tweet
 
   def tag_data(self, data):
     tagged_data = [TaggedDocument(words=word_tokenize(self.preprocess(tweet)), tags=[str(i)]) for i, tweet in enumerate(data)]
@@ -211,7 +226,6 @@ class NLP:
       #print(self.ml_model.get_params())
       self.ml_model.fit(x_embedded_array, y_train)
       
-      #joblib.dump(self.ml_model, f"./models/{numv} {self.ml_model.__class__.__name__}.model")
       print("ml_model saved")
 
 # this makes the plots for each run of the models
@@ -231,7 +245,7 @@ def makeGraphsPerRun(y_true, y_pred, name):
   plt.savefig("./plots/" + name + ".png")
 
 # this makes the plots at the end of all the runs. should only run once
-def makeFinalGraphs(model_names, accuracies):
+def makeFinalGraphs(model_names, accuracies, name):
   # bar graphs of different models vs accuracy
   f, ax = plt.subplots(figsize=(6, 6))
   colors = sns.color_palette("husl", len(model_names))
@@ -243,9 +257,10 @@ def makeFinalGraphs(model_names, accuracies):
   plt.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=3, ncol=1, mode="expand",
              borderaxespad=0.)  # https://stackoverflow.com/questions/44413020
   plt.xticks(xticks, "")
-  plt.ylim(64, 76)
-  ax.set(ylabel="Accuracy", xlabel="Model")
-  plt.savefig("./plots/accuracies.png", bbox_inches='tight')
+  plt.ylim(min(accuracies)-1, max(accuracies)+1)
+  ax.set(ylabel=name, xlabel="Model")
+  #plt.savefig("./plots/accuracies.png", bbox_inches='tight')
+  plt.savefig(f"./plots/{name}.png", bbox_inches='tight')
 
 
 if __name__ == "__main__":
@@ -266,6 +281,11 @@ if __name__ == "__main__":
 
   model_names = nlpTester.getModels()
   accuracies = nlpTester.getAccuracies()
+  recalls = nlpTester.getRecallScores()
+  f1scores = nlpTester.getf1Scores()
   print(model_names)
   print(accuracies)
-  makeFinalGraphs(model_names, accuracies)
+  makeFinalGraphs(model_names, accuracies, "accuracy")
+  makeFinalGraphs(model_names, f1scores, "f1score")
+  makeFinalGraphs(model_names, recalls, "recall")
+
