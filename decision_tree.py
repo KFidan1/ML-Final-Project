@@ -46,6 +46,7 @@ Y = data['annotation']
 Y = pd.to_numeric(Y, downcast="float")
 
 x_train, x_test, y_train, y_test = train_test_split(X, Y, test_size=0.1, shuffle=True)
+x_train, x_val, y_train, y_val = train_test_split(x_train, y_train, test_size=0.20, shuffle=True)
 
 #Running with no hyperparameters
 decision_tree = tree.DecisionTreeClassifier()
@@ -104,10 +105,10 @@ for score in scoring:
         print("The model is trained on the full development set.")
         print("The scores are computed on the full evaluation set.")
         print()
-        y_true, y_pred = y_test, clf.predict(x_test)
+        y_true, y_pred = y_val, clf.predict(x_val)
         print(classification_report(y_true, y_pred))
         print()
-        makeGraphsPerRun(y_test, y_pred, score)
+        makeGraphsPerRun(y_val, y_pred, score)
         
 
 print("-----BEST HYPERPARAMETERS---------")
