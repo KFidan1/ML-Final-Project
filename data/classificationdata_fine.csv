@@ -1,0 +1,11 @@
+vectors,classifier,misc1,misc2,misc3
+30,KNeighborsClassifier,1,0,0
+30,KNeighborsClassifier,3,0,0
+30,KNeighborsClassifier,7,0,0
+30,SVC,"poly",30,3
+30,SVC,"poly",30,4
+30,SVC,"poly",20,5
+30,SVC,"poly",25,5
+30,GaussianNB,1e-5,0,0
+30,GaussianNB,1e-6,0,0
+30,GaussianNB,1e-7,0,0

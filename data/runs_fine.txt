@@ -1,0 +1,142 @@
+Pandas(Index=3, vectors=30, classifier='SVC', misc1='poly', misc2=30, misc3=3)
+Loading existing model
+accuracy:  65.36634158539634
+[[2086  306]
+ [1079  528]]
+              precision    recall  f1-score   support
+
+           0       0.66      0.87      0.75      2392
+           1       0.63      0.33      0.43      1607
+
+    accuracy                           0.65      3999
+   macro avg       0.65      0.60      0.59      3999
+weighted avg       0.65      0.65      0.62      3999
+
+Pandas(Index=4, vectors=30, classifier='SVC', misc1='poly', misc2=30, misc3=4)
+Loading existing model
+accuracy:  66.8417104276069
+[[2129  263]
+ [1063  544]]
+              precision    recall  f1-score   support
+
+           0       0.67      0.89      0.76      2392
+           1       0.67      0.34      0.45      1607
+
+    accuracy                           0.67      3999
+   macro avg       0.67      0.61      0.61      3999
+weighted avg       0.67      0.67      0.64      3999
+
+Pandas(Index=5, vectors=30, classifier='SVC', misc1='poly', misc2=20, misc3=5)
+Loading existing model
+accuracy:  66.34158539634909
+[[2135  257]
+ [1089  518]]
+              precision    recall  f1-score   support
+
+           0       0.66      0.89      0.76      2392
+           1       0.67      0.32      0.43      1607
+
+    accuracy                           0.66      3999
+   macro avg       0.67      0.61      0.60      3999
+weighted avg       0.66      0.66      0.63      3999
+
+Pandas(Index=6, vectors=30, classifier='SVC', misc1='poly', misc2=25, misc3=5)
+ml_model saved
+accuracy:  67.11677919479871
+[[2126  266]
+ [1049  558]]
+              precision    recall  f1-score   support
+
+           0       0.67      0.89      0.76      2392
+           1       0.68      0.35      0.46      1607
+
+    accuracy                           0.67      3999
+   macro avg       0.67      0.62      0.61      3999
+weighted avg       0.67      0.67      0.64      3999
+
+Pandas(Index=0, vectors=30, classifier='KNeighborsClassifier', misc1='1', misc2=0, misc3=0)
+ml_model saved
+accuracy:  74.34358589647412
+[[1779  613]
+ [ 413 1194]]
+              precision    recall  f1-score   support
+
+           0       0.81      0.74      0.78      2392
+           1       0.66      0.74      0.70      1607
+
+    accuracy                           0.74      3999
+   macro avg       0.74      0.74      0.74      3999
+weighted avg       0.75      0.74      0.75      3999
+
+Pandas(Index=1, vectors=30, classifier='KNeighborsClassifier', misc1='3', misc2=0, misc3=0)
+Loading existing model
+accuracy:  72.44311077769441
+[[1815  577]
+ [ 525 1082]]
+              precision    recall  f1-score   support
+
+           0       0.78      0.76      0.77      2392
+           1       0.65      0.67      0.66      1607
+
+    accuracy                           0.72      3999
+   macro avg       0.71      0.72      0.71      3999
+weighted avg       0.73      0.72      0.73      3999
+
+Pandas(Index=2, vectors=30, classifier='KNeighborsClassifier', misc1='7', misc2=0, misc3=0)
+Loading existing model
+accuracy:  72.99324831207802
+[[1925  467]
+ [ 613  994]]
+              precision    recall  f1-score   support
+
+           0       0.76      0.80      0.78      2392
+           1       0.68      0.62      0.65      1607
+
+    accuracy                           0.73      3999
+   macro avg       0.72      0.71      0.71      3999
+weighted avg       0.73      0.73      0.73      3999
+
+Pandas(Index=7, vectors=30, classifier='GaussianNB', misc1='1e-5', misc2=0, misc3=0)
+ml_model saved
+accuracy:  73.5683920980245
+[[2176  216]
+ [ 841  766]]
+              precision    recall  f1-score   support
+
+           0       0.72      0.91      0.80      2392
+           1       0.78      0.48      0.59      1607
+
+    accuracy                           0.74      3999
+   macro avg       0.75      0.69      0.70      3999
+weighted avg       0.74      0.74      0.72      3999
+
+Pandas(Index=8, vectors=30, classifier='GaussianNB', misc1='1e-6', misc2=0, misc3=0)
+Loading existing model
+accuracy:  72.86821705426357
+[[2169  223]
+ [ 862  745]]
+              precision    recall  f1-score   support
+
+           0       0.72      0.91      0.80      2392
+           1       0.77      0.46      0.58      1607
+
+    accuracy                           0.73      3999
+   macro avg       0.74      0.69      0.69      3999
+weighted avg       0.74      0.73      0.71      3999
+
+Pandas(Index=9, vectors=30, classifier='GaussianNB', misc1='1e-7', misc2=0, misc3=0)
+Loading existing model
+accuracy:  72.86821705426357
+[[2169  223]
+ [ 862  745]]
+              precision    recall  f1-score   support
+
+           0       0.72      0.91      0.80      2392
+           1       0.77      0.46      0.58      1607
+
+    accuracy                           0.73      3999
+   macro avg       0.74      0.69      0.69      3999
+weighted avg       0.74      0.73      0.71      3999
+
+["(30, 'SVC', 'poly', 30, 3)", "(30, 'SVC', 'poly', 30, 4)", "(30, 'SVC', 'poly', 20, 5)", "(30, 'SVC', 'poly', 25, 5)", "(30, 'KNeighborsClassifier', '1', 0, 0)", "(30, 'KNeighborsClassifier', '3', 0, 0)", "(30, 'KNeighborsClassifier', '7', 0, 0)", "(30, 'GaussianNB', '1e-5', 0, 0)", "(30, 'GaussianNB', '1e-6', 0, 0)", "(30, 'GaussianNB', '1e-7', 0, 0)"]
+[65.36634158539634, 66.8417104276069, 66.34158539634909, 67.11677919479871, 74.34358589647412, 72.44311077769441, 72.99324831207802, 73.5683920980245, 72.86821705426357, 72.86821705426357]
