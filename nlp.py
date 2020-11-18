@@ -168,12 +168,12 @@ class NLP:
 
   # make all lowercase, string to list of words, remove stop words, then back to string
   def preprocess(self, tweet):
-    # tweet.lower()
+    return tweet.lower()
     # tokenized_tweet = word_tokenize(tweet)
     # filtered = [word for word in tokenized_tweet if not word in stop_words]
     # filtered_str = (" ").join(filtered)
     # return filtered_str
-    return tweet
+    #return tweet
 
   def tag_data(self, data):
     tagged_data = [TaggedDocument(words=word_tokenize(self.preprocess(tweet)), tags=[str(i)]) for i, tweet in enumerate(data)]
