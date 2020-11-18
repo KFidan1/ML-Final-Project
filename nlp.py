@@ -40,6 +40,13 @@ class NLPTester:
     self.single_model = single_model
     self.ml_models = []
     self.tup = []
+    self.accuracies = []
+
+  def getModels(self):
+    return [str(model[0].output)[(str(model[0].output)).find("'"):(str(model[0].output)).rfind("'")+1] for model in self.ml_models]
+
+  def getAccuracies(self):
+    return self.accuracies
 
   #TODO, update to support parameters
   def generate_models(self):
@@ -62,7 +69,6 @@ class NLPTester:
     svcdata = data[data["classifier"] == 'SVC']
     logdata = data[data["classifier"] == 'LogisticRegression']
 
-    #I just need to duplicate this for other classifiers, which is easy
     for svc in svcdata.itertuples():
       try:
         loaded = joblib.load(f"./models/{svc[1]} {svc[2]} {svc[3]} {svc[4]} {svc[5]}.model")
@@ -100,20 +106,18 @@ class NLPTester:
         logistic_class = LogisticRegression(C = int(logistic[3]))
         models.append((Classifier("LogisticRegression", logistic_class, logistic), False))
 
+    self.ml_models = models
     return models
   
   def test_models(self):
     print("Testing")
 
-    svc_obj = self.generate_models()
+    models = self.generate_models()
 
-    #This is a terrible way to do this, I want something that works though right now.
-    #like this is finna about to take so much memory
-    #Also, I think there might be a bug where the first thing gets ran a lot
-    for model in svc_obj:
-      svc = model[0].output
+    for model in models:
+      class_array = model[0].output
       try:
-        d2v = Doc2Vec.load(f"./models/d2v_{svc[1]}.model")
+        d2v = Doc2Vec.load(f"./models/d2v_{class_array[1]}.model")
       except:
         d2v = None
 
@@ -121,11 +125,11 @@ class NLPTester:
 
       print(model[0].output)
       if(model[1] == False):
-        nlp.train(x_train, y_train, svc[1])
+        nlp.train(x_train, y_train, class_array[1])
         if(model[0].name == "SVC"):
-          joblib.dump(nlp.ml_model, f"./models/{svc[1]} {svc[2]} {svc[3]} {svc[4]} {svc[5]}.model")
+          joblib.dump(nlp.ml_model, f"./models/{class_array[1]} {class_array[2]} {class_array[3]} {class_array[4]} {class_array[5]}.model")
         else:
-          joblib.dump(nlp.ml_model, f"./models/{svc[1]} {svc[2]} {svc[3]}.model")
+          joblib.dump(nlp.ml_model, f"./models/{class_array[1]} {class_array[2]} {class_array[3]}.model")
       else:
         print("Loading existing model")
 
@@ -134,10 +138,14 @@ class NLPTester:
       # print("pred, actual, tweet")
       # for i in range(len(y_pred)-1):
       #   print(y_pred[i], y_test[i], x_test[i])
+
+
       print("accuracy: ", accuracy_score(y_test, y_pred) * 100)
       print(confusion_matrix(y_test, y_pred))
       print(classification_report(y_test, y_pred))
-      makeGraphs(y_test, y_pred, str(model[0].output))
+      self.accuracies.append(accuracy_score(y_test, y_pred) * 100)
+      makeGraphsPerRun(y_test, y_pred, str(model[0].output))
+
 
 class NLP:
   def __init__(self, d2v_model=None, ml_model=None):
@@ -167,7 +175,7 @@ class NLP:
       print(f"Creating doc2vec for # vectors = {numv}")
       tagged_data = self.tag_data(x_train)
 
-      # hyperparameters
+      # todo try different hyperparams for d2v
       max_epochs = 10
       vec_size = numv
       alpha = 0.025
@@ -199,24 +207,41 @@ class NLP:
       #print(self.ml_model.get_params())
       self.ml_model.fit(x_embedded_array, y_train)
       
-      #joblib.dump(self.ml_model, f"./models/{numv} {self.ml_model.__class__.__name__}.model")
       print("ml_model saved")
 
-def makeGraphs(y_true, y_pred, name = None):
-  # todo make more plots
+# this makes the plots for each run of the models
+def makeGraphsPerRun(y_true, y_pred, name):
   matrix = confusion_matrix(y_true, y_pred)
 
   # Draw a heatmap with the numeric values in each cell
-  f, ax = plt.subplots(figsize=(9, 6))
+  f, ax = plt.subplots(figsize=(6, 6))
   sns.heatmap(matrix, annot=True, fmt="d", linewidths=.5, ax=ax, cmap="RdYlGn", \
               xticklabels=["Not Troll", "Troll"], yticklabels=["Not Troll", "Troll"])
   plt.ylabel('Predicted')
   plt.xlabel('Actual')
-  
+
   if(name != None):
     plt.title(name)
 
-  plt.show()
+  plt.savefig("./plots/" + name + ".png")
+
+# this makes the plots at the end of all the runs. should only run once
+def makeFinalGraphs(model_names, accuracies):
+  # bar graphs of different models vs accuracy
+  f, ax = plt.subplots(figsize=(6, 6))
+  colors = sns.color_palette("husl", len(model_names))
+  xticks = [i for i in range(len(model_names))]
+
+  for i in range(len(model_names)):
+    plt.bar(xticks[i], accuracies[i], width=0.9, color=colors[i], label=model_names[i])
+
+  plt.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=3, ncol=1, mode="expand",
+             borderaxespad=0.)  # https://stackoverflow.com/questions/44413020
+  plt.xticks(xticks, "")
+  plt.ylim(64, 76)
+  ax.set(ylabel="Accuracy", xlabel="Model")
+  plt.savefig("./plots/accuracies.png", bbox_inches='tight')
+
 
 if __name__ == "__main__":
   # read the data, shuffle, and split into train/test
@@ -231,5 +256,11 @@ if __name__ == "__main__":
   else:
     inputname = None
 
-  nlpTester = NLPTester(num_vectors=20, single_model = inputname)
+  nlpTester = NLPTester(num_vectors=20, single_model=inputname)
   nlpTester.test_models()
+
+  model_names = nlpTester.getModels()
+  accuracies = nlpTester.getAccuracies()
+  print(model_names)
+  print(accuracies)
+  makeFinalGraphs(model_names, accuracies)
