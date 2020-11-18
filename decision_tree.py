@@ -9,11 +9,28 @@ from sklearn import tree
 from sklearn.tree import export_text
 import graphviz
 import matplotlib.pyplot as plt
+import seaborn as sns
+import warnings
 
 def warn(*args, **kwargs):
     pass
-import warnings
 warnings.warn = warn
+
+def makeGraphsPerRun(y_true, y_pred, name):
+  matrix = confusion_matrix(y_true, y_pred)
+
+  # Draw a heatmap with the numeric values in each cell
+  f, ax = plt.subplots(figsize=(6, 6))
+  sns.heatmap(matrix, annot=True, fmt="d", linewidths=.5, ax=ax, cmap="RdYlGn", \
+              xticklabels=["Not Troll", "Troll"], yticklabels=["Not Troll", "Troll"])
+  plt.ylabel('Predicted')
+  plt.xlabel('Actual')
+
+  if(name != None):
+    plt.title(name)
+
+  plt.savefig("./plots/decision_tree/" + name + ".png")
+
 data = pd.read_csv('data/dataset.csv', ',')
 
 features = ['sentence_length', 'compound','neg' , 'neu' , 'pos', 'punctuation_count', 'contain_profanity', 'num_profanity']
@@ -82,6 +99,7 @@ for score in scoring:
         y_true, y_pred = y_test, clf.predict(x_test)
         print(classification_report(y_true, y_pred))
         print()
+        makeGraphsPerRun(y_test, y_pred, score)
         
 
 print("-----BEST HYPERPARAMETERS---------")
@@ -94,6 +112,7 @@ print("-----RESULTS OF BEST HYPERPARAMETERS------")
 print(confusion_matrix(y_test, pred))
 print(classification_report(y_test, pred))
 
+makeGraphsPerRun(y_test, pred, "Best hyperparameters for decision tree")
 
 #details about the tree
 r = export_text(decision_tree, feature_names = ['sentence_length', 'compound','neg' , 'neu' , 'pos', 'punctuation_count', 'contain_profanity', 'num_profanity'])
