@@ -30,7 +30,18 @@ Y = pd.to_numeric(Y, downcast="float")
 
 x_train, x_test, y_train, y_test = train_test_split(X, Y, test_size=0.1, shuffle=True)
 
+#Running with no hyperparameters
 decision_tree = tree.DecisionTreeClassifier()
+decision_tree.fit(x_train, y_train)
+pred = decision_tree.predict(x_test)
+
+print("-----RESULTS OF NO HYPERPARAMETERS------")
+print(confusion_matrix(y_test, pred))
+print(classification_report(y_test, pred))
+
+
+
+
 
 tuned_parameters = [
     {
@@ -47,8 +58,11 @@ for score in scoring:
 
         print("best parameters are: ")
         print(clf.best_params_)
+        if(score == "accuracy"):
+                best = clf.best_params_
         print("Grid scores on development set:")
         print()
+        
         
         means = clf.cv_results_['mean_test_score']
         stds = clf.cv_results_['std_test_score']
@@ -67,8 +81,9 @@ for score in scoring:
         print()
         
 
-
-decision_tree = tree.DecisionTreeClassifier(max_depth=10, min_impurity_decrease=0.0001)
+print("-----BEST HYPERPARAMETERS---------")
+print(best)
+decision_tree = tree.DecisionTreeClassifier(max_depth=best['max_depth'], min_impurity_decrease=best['min_impurity_decrease'])
 decision_tree.fit(x_train, y_train)
 pred = decision_tree.predict(x_test)
 
