@@ -62,7 +62,7 @@ print("Tree Leaf = ", decision_tree.get_n_leaves())
 print()
 
 
-
+#these were used for the course grid search
 tuned_parameters = [
     {
         'max_depth': [2, 4, 6, 10, 20, 30, 40, 80],
@@ -70,10 +70,18 @@ tuned_parameters = [
     }
 ]
 
+#these are used for the fine grid search
+fine_tuned_parameters = [
+    {
+        'max_depth': [30, 40, 45, 50],
+        'min_impurity_decrease': [1e-4, 5e-5, 1e-5, 5e-6, 1e-6] 
+    }
+]
+
 scoring = ('precision', 'recall','accuracy')
 
 for score in scoring:
-        clf = GridSearchCV(decision_tree, tuned_parameters, scoring=score, refit = "accuracy",return_train_score=True)
+        clf = GridSearchCV(decision_tree, fine_tuned_parameters, scoring=score, refit = "accuracy",return_train_score=True)
         clf.fit(x_train, y_train)
 
         print("best parameters are: ")
@@ -111,6 +119,7 @@ pred = decision_tree.predict(x_test)
 print("-----RESULTS OF BEST HYPERPARAMETERS------")
 print(confusion_matrix(y_test, pred))
 print(classification_report(y_test, pred))
+
 
 makeGraphsPerRun(y_test, pred, "Best hyperparameters for decision tree")
 
