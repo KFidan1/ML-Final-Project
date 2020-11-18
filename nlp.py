@@ -26,6 +26,11 @@ try:
   nltk.data.find('tokenizers/punkt')
 except LookupError:
   nltk.download('punkt')
+try:
+  nltk.data.find('corpora/stopwords')
+except LookupError:
+  nltk.download('stopwords')
+stop_words = set(stopwords.words('english'))
 
 class Classifier:
   def __init__(self, name, classifier, output):
@@ -152,9 +157,14 @@ class NLP:
     self.d2v_model = d2v_model # this is the doc2vec model to construct the word binding arrays
     self.ml_model = ml_model   # this is the ml model that is trained on the doc2vec arrays
 
+  # make all lowercase, string to list of words, remove stop words, then back to string
   def preprocess(self, tweet):
-    # todo take out stop words, dont change anything at all, etc
-    return tweet.lower()
+    # tweet.lower()
+    # tokenized_tweet = word_tokenize(tweet)
+    # filtered = [word for word in tokenized_tweet if not word in stop_words]
+    # filtered_str = (" ").join(filtered)
+    # return filtered_str
+    return tweet
 
   def tag_data(self, data):
     tagged_data = [TaggedDocument(words=word_tokenize(self.preprocess(tweet)), tags=[str(i)]) for i, tweet in enumerate(data)]
