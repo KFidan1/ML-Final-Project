@@ -27,24 +27,25 @@ xlimit = {
 }
 X = data[features]
 
-# feature vs count 
 for feat in X:
+    # feature vs count
     plt.hist(data[feat], bins = bins[feat], rwidth=0.9)
     plt.title("{} vs. # of tweets".format(feat))
     plt.xlabel("{}".format(feat))
     plt.ylabel("# of Tweets")
     plt.xlim(0, xlimit[feat])
     plt.savefig('data_count/count/{}_count.png'.format(feat), format='png')
-    plt.show()
     plt.clf()
 
-    plt.scatter(data["annotation"], data[feat] )
+    # feature vs annotation
+    plt.scatter(data[feat], data["annotation"], s=2)
     plt.title("{} vs. Troll Tweet".format(feat))
     plt.xlabel("{}".format(feat))
-    plt.ylabel("Troll Tweet")
+    plt.ylabel("Troll Label")
+    axes = plt.gca()
+    axes.set_ylim([-0.7, 1.7])
+    plt.yticks([0, 1])
     plt.savefig('data_count/output/{}_vs_annotation.png'.format(feat), format='png')
-    plt.xticks(np.arange(0, 2, 1.0))
-    plt.show()
     plt.clf()
 
 
