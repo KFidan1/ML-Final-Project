@@ -39,13 +39,16 @@ print("-----RESULTS OF NO HYPERPARAMETERS------")
 print(confusion_matrix(y_test, pred))
 print(classification_report(y_test, pred))
 
-
+print("Tree Depth = ", decision_tree.get_depth())
+print()
+print("Tree Leaf = ", decision_tree.get_n_leaves())
+print()
 
 
 
 tuned_parameters = [
     {
-        'max_depth': [2, 4, 6, 8, 10],
+        'max_depth': [2, 4, 6, 10, 20, 30, 40, 80],
         'min_impurity_decrease': [1e-1, 1e-2, 1e-3, 1e-4]
     }
 ]
@@ -102,6 +105,7 @@ print("Tree Depth = ", decision_tree.get_depth())
 print()
 print("Tree Leaf = ", decision_tree.get_n_leaves())
 print()
+
 
 fn= ['sentence_length', 'compound','neg' , 'neu' , 'pos', 'punctuation_count', 'contain_profanity', 'num_profanity']
 cn=['Troll', 'Not Troll']
