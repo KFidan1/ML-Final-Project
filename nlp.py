@@ -13,7 +13,7 @@ from sklearn.naive_bayes import GaussianNB
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.svm import SVC
 from sklearn.tree import DecisionTreeClassifier
-from sklearn.metrics import accuracy_score, confusion_matrix, classification_report
+from sklearn.metrics import accuracy_score, confusion_matrix, classification_report, f1_score, recall_score
 
 import matplotlib.pyplot as plt
 import seaborn as sns
@@ -39,14 +39,22 @@ class NLPTester:
     self.num_vectors = num_vectors
     self.single_model = single_model
     self.ml_models = []
-    self.tup = []
     self.accuracies = []
+    self.f1_scores = []
+    self.recall_scores = []
 
   def getModels(self):
-    return [str(model[0].output)[(str(model[0].output)).find("'"):(str(model[0].output)).rfind("'")+1] for model in self.ml_models]
+    #return [str(model[0].output)[(str(model[0].output)).find("'"):(str(model[0].output)).rfind("'")+1] for model in self.ml_models]
+    return [str(model[0].output[1:]) for model in self.ml_models]
 
   def getAccuracies(self):
     return self.accuracies
+  
+  def getf1Scores(self):
+    return self.f1_scores
+
+  def getRecallScores(self):
+    return self.recall_scores
 
   #TODO, update to support parameters
   def generate_models(self):
@@ -77,7 +85,7 @@ class NLPTester:
         if(svc[3] == "poly"):
           svc_class = SVC(kernel=svc[3], C=svc[4], degree=svc[5])
         elif(svc[3] == "rbf"):
-          svc_class = SVC(kernel=svc[3], C=svc[4], gamma=svc[5])
+          svc_class = SVC(kernel=svc[3], C=svc[4], gamma=float(svc[5]))
         elif(svc[3] == "linear"):
           svc_class = SVC(kernel=svc[3], C=svc[4])
         models.append((Classifier("SVC", svc_class, svc), False))
@@ -139,12 +147,13 @@ class NLPTester:
       # for i in range(len(y_pred)-1):
       #   print(y_pred[i], y_test[i], x_test[i])
 
-
       print("accuracy: ", accuracy_score(y_test, y_pred) * 100)
       print(confusion_matrix(y_test, y_pred))
       print(classification_report(y_test, y_pred))
       self.accuracies.append(accuracy_score(y_test, y_pred) * 100)
-      makeGraphsPerRun(y_test, y_pred, str(model[0].output))
+      self.f1_scores.append(f1_score(y_test, y_pred) * 100)
+      self.recall_scores.append(recall_score(y_test, y_pred) * 100)
+      makeGraphsPerRun(y_test, y_pred, str(model[0].output[1:]))
 
 
 class NLP:
@@ -226,7 +235,7 @@ def makeGraphsPerRun(y_true, y_pred, name):
   plt.savefig("./plots/" + name + ".png")
 
 # this makes the plots at the end of all the runs. should only run once
-def makeFinalGraphs(model_names, accuracies):
+def makeFinalGraphs(model_names, accuracies, name):
   # bar graphs of different models vs accuracy
   f, ax = plt.subplots(figsize=(6, 6))
   colors = sns.color_palette("husl", len(model_names))
@@ -238,9 +247,10 @@ def makeFinalGraphs(model_names, accuracies):
   plt.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=3, ncol=1, mode="expand",
              borderaxespad=0.)  # https://stackoverflow.com/questions/44413020
   plt.xticks(xticks, "")
-  plt.ylim(64, 76)
-  ax.set(ylabel="Accuracy", xlabel="Model")
-  plt.savefig("./plots/accuracies.png", bbox_inches='tight')
+  plt.ylim(min(accuracies)-1, max(accuracies)+1)
+  ax.set(ylabel=name, xlabel="Model")
+  #plt.savefig("./plots/accuracies.png", bbox_inches='tight')
+  plt.savefig(f"./plots/{name}.png", bbox_inches='tight')
 
 
 if __name__ == "__main__":
@@ -261,6 +271,11 @@ if __name__ == "__main__":
 
   model_names = nlpTester.getModels()
   accuracies = nlpTester.getAccuracies()
+  recalls = nlpTester.getRecallScores()
+  f1scores = nlpTester.getf1Scores()
   print(model_names)
   print(accuracies)
-  makeFinalGraphs(model_names, accuracies)
+  makeFinalGraphs(model_names, accuracies, "accuracy")
+  makeFinalGraphs(model_names, f1scores, "f1score")
+  makeFinalGraphs(model_names, recalls, "recall")
+

@@ -1,14 +1,14 @@
 |--- neg <= 0.08
 |   |--- contain_profanity <= 0.50
-|   |   |--- sentence_length <= 43.50
+|   |   |--- sentence_length <= 63.50
 |   |   |   |--- class: 0.0
-|   |   |--- sentence_length >  43.50
+|   |   |--- sentence_length >  63.50
 |   |   |   |--- class: 0.0
 |   |--- contain_profanity >  0.50
-|   |   |--- neg <= 0.07
-|   |   |   |--- class: 1.0
-|   |   |--- neg >  0.07
+|   |   |--- neu <= 0.68
 |   |   |   |--- class: 0.0
+|   |   |--- neu >  0.68
+|   |   |   |--- class: 1.0
 |--- neg >  0.08
 |   |--- contain_profanity <= 0.50
 |   |   |--- neg <= 0.48
