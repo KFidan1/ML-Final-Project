@@ -69,7 +69,6 @@ class NLPTester:
     svcdata = data[data["classifier"] == 'SVC']
     logdata = data[data["classifier"] == 'LogisticRegression']
 
-    #I just need to duplicate this for other classifiers, which is easy
     for svc in svcdata.itertuples():
       try:
         loaded = joblib.load(f"./models/{svc[1]} {svc[2]} {svc[3]} {svc[4]} {svc[5]}.model")
@@ -113,15 +112,12 @@ class NLPTester:
   def test_models(self):
     print("Testing")
 
-    svc_obj = self.generate_models()
+    models = self.generate_models()
 
-    #This is a terrible way to do this, I want something that works though right now.
-    #like this is finna about to take so much memory
-    #Also, I think there might be a bug where the first thing gets ran a lot
-    for model in svc_obj:
-      svc = model[0].output
+    for model in models:
+      class_array = model[0].output
       try:
-        d2v = Doc2Vec.load(f"./models/d2v_{svc[1]}.model")
+        d2v = Doc2Vec.load(f"./models/d2v_{class_array[1]}.model")
       except:
         d2v = None
 
@@ -129,11 +125,11 @@ class NLPTester:
 
       print(model[0].output)
       if(model[1] == False):
-        nlp.train(x_train, y_train, svc[1])
+        nlp.train(x_train, y_train, class_array[1])
         if(model[0].name == "SVC"):
-          joblib.dump(nlp.ml_model, f"./models/{svc[1]} {svc[2]} {svc[3]} {svc[4]} {svc[5]}.model")
+          joblib.dump(nlp.ml_model, f"./models/{class_array[1]} {class_array[2]} {class_array[3]} {class_array[4]} {class_array[5]}.model")
         else:
-          joblib.dump(nlp.ml_model, f"./models/{svc[1]} {svc[2]} {svc[3]}.model")
+          joblib.dump(nlp.ml_model, f"./models/{class_array[1]} {class_array[2]} {class_array[3]}.model")
       else:
         print("Loading existing model")
 
@@ -211,7 +207,6 @@ class NLP:
       #print(self.ml_model.get_params())
       self.ml_model.fit(x_embedded_array, y_train)
       
-      #joblib.dump(self.ml_model, f"./models/{numv} {self.ml_model.__class__.__name__}.model")
       print("ml_model saved")
 
 # this makes the plots for each run of the models
