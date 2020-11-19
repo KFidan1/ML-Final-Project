@@ -28,8 +28,8 @@ def makeGraphsPerRun(y_true, y_pred, name):
 
   if(name != None):
     plt.title(name)
-
   plt.savefig("./plots/decision_tree/" + name + ".png")
+
 
 data = pd.read_csv('data/dataset.csv', ',')
 
@@ -56,7 +56,7 @@ pred = decision_tree.predict(x_test)
 print("-----RESULTS OF NO HYPERPARAMETERS------")
 print(confusion_matrix(y_test, pred))
 print(classification_report(y_test, pred))
-
+makeGraphsPerRun(y_test, pred, "Best result for decision tree with no hyperparameters")
 print("Tree Depth = ", decision_tree.get_depth())
 print()
 print("Tree Leaf = ", decision_tree.get_n_leaves())
@@ -143,4 +143,4 @@ tree.plot_tree(decision_tree,
                feature_names = fn, 
                class_names=cn,
                filled = True)
-plt.show()
+#plt.show()
