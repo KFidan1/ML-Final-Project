@@ -49,7 +49,6 @@ class NLPTester:
     self.recall_scores = []
 
   def getModels(self):
-    #return [str(model[0].output)[(str(model[0].output)).find("'"):(str(model[0].output)).rfind("'")+1] for model in self.ml_models]
     return [str(model[0].output[1:]) for model in self.ml_models]
 
   def getAccuracies(self):
@@ -61,12 +60,10 @@ class NLPTester:
   def getRecallScores(self):
     return self.recall_scores
 
-  #TODO, update to support parameters
   def generate_models(self):
     print("Generate models")
 
     models = []
-    #This actually doesn't work yet
     if(self.single_model != None):
       try:
         print(self.single_model)
@@ -148,10 +145,7 @@ class NLPTester:
 
       y_pred = nlp.test(x_test)
 
-      # print("pred, actual, tweet")
-      # for i in range(len(y_pred)-1):
-      #   print(y_pred[i], y_test[i], x_test[i])
-
+      # print metrics and make the graphs
       print("accuracy: ", accuracy_score(y_test, y_pred) * 100)
       print(confusion_matrix(y_test, y_pred))
       print(classification_report(y_test, y_pred))
@@ -169,6 +163,8 @@ class NLP:
   # make all lowercase, string to list of words, remove stop words, then back to string
   def preprocess(self, tweet):
     return tweet.lower()
+
+    # alternative preprocessing methods
     # tokenized_tweet = word_tokenize(tweet)
     # filtered = [word for word in tokenized_tweet if not word in stop_words]
     # filtered_str = (" ").join(filtered)
@@ -189,12 +185,10 @@ class NLP:
     return y_pred
 
   def train(self, x_train, y_train, numv):
-    #TODO: Remove duplicate code
     if self.d2v_model is None:
       print(f"Creating doc2vec for # vectors = {numv}")
       tagged_data = self.tag_data(x_train)
 
-      # todo try different hyperparams for d2v
       max_epochs = 10
       vec_size = numv
       alpha = 0.025
@@ -216,14 +210,12 @@ class NLP:
       self.d2v_model.save(f"./models/d2v_{vec_size}.model")
       print("d2v_model saved")
 
-    #Fix this to support both fit and unfit, DOES NOT WORK %100 yet
     if self.ml_model is not None:
       # get word embeddings from the trained d2v model
       x_tagged = self.tag_data(x_train)
       x_embedded_array = [self.d2v_model.infer_vector(x[0]) for x in x_tagged]
 
       # train the ML model from the word embeddings
-      #print(self.ml_model.get_params())
       self.ml_model.fit(x_embedded_array, y_train)
       
       print("ml_model saved")
@@ -259,7 +251,6 @@ def makeFinalGraphs(model_names, accuracies, name):
   plt.xticks(xticks, "")
   plt.ylim(min(accuracies)-1, max(accuracies)+1)
   ax.set(ylabel=name, xlabel="Model")
-  #plt.savefig("./plots/accuracies.png", bbox_inches='tight')
   plt.savefig(f"./plots/{name}.png", bbox_inches='tight')
 
 
