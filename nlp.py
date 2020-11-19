@@ -21,6 +21,7 @@ import joblib
 import pandas as pd
 import nltk
 import sys
+import os
 
 try:
   nltk.data.find('tokenizers/punkt')
@@ -261,6 +262,12 @@ if __name__ == "__main__":
   X = data["content"]
   Y = data["annotation"]
   x_train, x_test, y_train, y_test = train_test_split(X.to_numpy(), Y.to_numpy(), test_size=0.2, shuffle=False)
+
+  if(not os.path.isdir("plots/")):
+    os.mkdir("plots")
+
+  if(not os.path.isdir("models/")):
+    os.mkdir("models")
 
   if(len(sys.argv) > 1):
     inputname = sys.argv[1]
